@@ -42,7 +42,7 @@ Sonic_right = Serial(Sonic_PORT_right, 115200, timeout = 3)
 ## 위에 Serial 통신 포트 설정 부분을 SONIC2CAN class에 모두 포함시켜도 괜찮을 것 같다.
 class SONIC2CAN:
     def test(self):
-        data = ';06'
+        data = ';06\n'
         Sonic_left.write(bytes(data.encode()))
         line = Sonic_left.readline()
         print(line)
