@@ -24,6 +24,80 @@ Board_left = Serial(PORT_left, 115200, timeout = 3)
 PORT_right = '/dev/ttyACM1'
 Board_right = Serial(PORT_right, 115200, timeout = 3)
 
+
+
+
+# SONIC2CAN
+#
+# /dev/serial0
+# /dev/serial1
+Sonic_PORT_left = '/dev/serial0'
+Sonic_left = Serial(Sonic_PORT_left, 115200, timeout = 3)
+
+# /dev/ttyS0
+# /dev/ttyAMA0
+Sonic_PORT_right = '/dev/serial1'
+Sonic_right = Serial(Sonic_PORT_right, 115200, timeout = 3)
+
+## 위에 Serial 통신 포트 설정 부분을 SONIC2CAN class에 모두 포함시켜도 괜찮을 것 같다.
+class SONIC2CAN:
+    def test(self):
+        data = ';06'
+        Sonic_left.write(bytes(data.encode()))
+        line = Sonic_left.readline()
+        print(line)
+        
+Sonic_left_inst = SONIC2CAN()
+Sonic_left_inst.test()
+
+
+
+
+class WheelChair:
+    def leftSpeed(self, speed):
+        speed = str(speed)
+        Board_left.write(bytes(speed.encode()))
+        time.sleep(0.3)
+
+    def rightSpeed(self, speed):
+        speed = str(speed)
+        Board_right.write(bytes(speed.encode()))
+        time.sleep(0.3)
+
+
+    def forward(self):
+        self.leftSpeed(1000)
+        self.rightSpeed(1000)
+        
+
+    def backward(self):
+        self.leftSpeed(-1000)
+        self.rightSpeed(-1000)
+
+    def left(self):
+        self.leftSpeed(-1000)
+        self.rightSpeed(1000)
+
+    def right(self):
+        self.leftSpeed(1000)
+        self.rightSpeed(-1000)
+
+    def isObstacle(self):
+        pass
+
+    def run(self):
+        pass
+
+def main():
+    wheelChair = WheelChair()
+    while True:
+        wheelChair.run()
+
+if __name__ == '__main__':
+    main()
+
+
+
 # LiDar x4
 PORT_x4 = '/dev/ydlidar'
 X4 = PyLidar3.YdLidarX4(PORT_x4)
@@ -96,46 +170,3 @@ while True:
 
     time.sleep(1)
 
-
-class WheelChair:
-    def leftSpeed(self, speed):
-        speed = str(speed)
-        Board_left.write(bytes(speed.encode()))
-        time.sleep(0.3)
-
-    def rightSpeed(self, speed):
-        speed = str(speed)
-        Board_right.write(bytes(speed.encode()))
-        time.sleep(0.3)
-
-
-    def forward(self):
-        self.leftSpeed(1000)
-        self.rightSpeed(1000)
-        
-
-    def backward(self):
-        self.leftSpeed(-1000)
-        self.rightSpeed(-1000)
-
-    def left(self):
-        self.leftSpeed(-1000)
-        self.rightSpeed(1000)
-
-    def right(self):
-        self.leftSpeed(1000)
-        self.rightSpeed(-1000)
-
-    def isObstacle(self):
-        pass
-
-    def run(self):
-        pass
-
-def main():
-    wheelChair = WheelChair()
-    while True:
-        wheelChair.run()
-
-if __name__ == '__main__':
-    main()
