@@ -16,6 +16,8 @@ $ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 $ sudo update-alternatives --config python
 $ sudo ln -sf /usr/bin/python3.7 /usr/bin/python3
 $ sudo apt-get install cmake ninja-build
+$ wget http://www.cmake.org/files/v3.19/cmake-3.19.4.tar.gz
+
 $ git clone https://github.com/Microsoft/vcpkg.git
 $ cd vcpkg
 $ ./bootstrap-vcpkg.sh
