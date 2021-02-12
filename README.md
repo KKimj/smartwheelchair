@@ -29,7 +29,12 @@ $ git clone https://github.com/Microsoft/vcpkg.git
 $ cd vcpkg
 $ ./bootstrap-vcpkg.sh
 $ ./vcpkg integrate install
-$ ./vcpkg install realsense2
+
+$ export VCPKG_FORCE_SYSTEM_BINARIES=1
+$ ./vcpkg install grpc
+
+// $ ./vcpkg install realsense2
+
 $ sudo apt install python3-pip
 $ pip3 install serial
 $ pip3 install PyLidar3
