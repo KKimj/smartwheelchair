@@ -8,7 +8,10 @@ $ python3 ./smartwheelchair/src/main.py
 
 ### Prerequisites
 ```
-$ sudo apt install python3
+$ sudo apt update && sudo apt upgrade
+$ sudo apt install python3 python3-pip software-properties-common
+$ sudo add-apt-repository ppa:deadsnakes/ppa
+$ sudo apt install python3.7
 $ sudo apt install python3-pip
 $ pip3 install serial
 $ pip3 install PyLidar3
