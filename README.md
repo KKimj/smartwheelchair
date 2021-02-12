@@ -15,8 +15,15 @@ $ sudo apt install python3.7
 $ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 $ sudo update-alternatives --config python
 $ sudo ln -sf /usr/bin/python3.7 /usr/bin/python3
-$ sudo apt-get install cmake ninja-build
+$ sudo apt-get install ninja-build
+
 $ wget http://www.cmake.org/files/v3.19/cmake-3.19.4.tar.gz
+$ tar xpvf cmake-3.19.4.tar.gz cmake-3.19.4/
+$ cd cmake-3.19.4/
+$ ./bootstrap --system-curl
+$ make -j6
+$ echo 'export PATH=/home/$USER/cmake-3.19.4/bin/:$PATH' >> ~/.bashrc
+$ source ~/.bashrc
 
 $ git clone https://github.com/Microsoft/vcpkg.git
 $ cd vcpkg
