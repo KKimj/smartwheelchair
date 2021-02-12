@@ -12,6 +12,8 @@ $ sudo apt update && sudo apt upgrade
 $ sudo apt install python3 python3-pip software-properties-common
 $ sudo add-apt-repository ppa:deadsnakes/ppa
 $ sudo apt install python3.7
+$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
+$ sudo update-alternatives --config python
 $ sudo apt install python3-pip
 $ pip3 install serial
 $ pip3 install PyLidar3
