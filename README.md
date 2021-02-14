@@ -47,3 +47,4 @@ $ python3 ./smartwheelchair/src/test/test.py
 ```
 
 ## Acknowledgments
+https://github.com/sparkfun/SparkFun_MPU-9250_Breakout_Arduino_Library
