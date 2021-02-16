@@ -33,21 +33,42 @@ X4 = PyLidar3.YdLidarX4(PORT_x4)
 # /dev/serial0
 # /dev/serial1
 Sonic_PORT_left = '/dev/serial0'
-Sonic_left = Serial(Sonic_PORT_left, 115200, timeout = 3)
+# Sonic_left = Serial(Sonic_PORT_left, 115200, timeout = 3)
 
 # /dev/ttyS0
 # /dev/ttyAMA0
 Sonic_PORT_right = '/dev/serial1'
-Sonic_right = Serial(Sonic_PORT_right, 115200, timeout = 3)
+# Sonic_right = Serial(Sonic_PORT_right, 115200, timeout = 3)
 
 
 class SONIC2CAN:
-    def test(self):
-        line = Sonic_left.readline()
-        print(line)
-        pass
+    def __init__(self):
+        self.serial_left = Serial('/dev/serial0', 115200, timeout = 3)
+        self.serial_right = Serial('/dev/serial1', 115200, timeout = 3)
 
-    pass
+    def getData(self):
+        command = ';06\r'
+        
+        self.serial_left.write(bytes(command.encode()))
+        self.data_left = self.serial_left.readline()
+
+        self.serial_right.write(bytes(command.encode()))
+        self.data_right = self.serial_right.readline()
+
+
+
+
+    def test(self):
+        command = ';06\r'
+        self.serial_left.write(bytes(command.encode()))
+        line = self.serial_left.readline()
+        print('left : '+line)
+
+        self.serial_right.write(bytes(command.encode()))
+        line = self.serial_right.readline()
+        print('right : '+line)
+        pass
+    
 
 
 
@@ -90,7 +111,7 @@ class WheelChair:
     def run(self):
         pass
 
-    def tester(self):
+    def test(self):
         while True:
             mode = int(input('1 : Forward 2: Backward 3: Left 4: Right 5: Quit'))
             if mode == 1:
@@ -115,7 +136,10 @@ class WheelChair:
 
 def main():
     wheelChair = WheelChair()
-    wheelChair.tester()
+    wheelChair.test()
+
+    sonic2can = SONIC2CAN()
+    sonic2can.test()
 
     while True:
         wheelChair.run()
