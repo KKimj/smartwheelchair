@@ -11,8 +11,9 @@ $ python3 ./smartwheelchair/src/main.py
 $ sudo apt update && sudo apt upgrade
 $ sudo apt install python3 python3-pip software-properties-common
 $ sudo add-apt-repository ppa:deadsnakes/ppa
-$ sudo apt install python3.7
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
+$ sudo apt install python3.5
+$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
+$ sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
 $ sudo update-alternatives --config python
 $ sudo ln -sf /usr/bin/python3.7 /usr/bin/python3
 $ sudo apt-get install ninja-build
