@@ -35,6 +35,11 @@ $ source ~/.bashrc
 $ sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
 $ sudo apt install python3-rosdep
 
+$ cd ~
+$ git clone https://github.com/YDLIDAR/ydlidar_ros
+$ git chectout master
+$ catkin_make
+
 
 
 $ git clone https://github.com/Microsoft/vcpkg.git
