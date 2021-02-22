@@ -1,5 +1,5 @@
-# PerformanceFuzzer
-PerformanceFuzzer
+# smartwheelchair
+smartwheelchair
 
 ## Getting Started
 ```
