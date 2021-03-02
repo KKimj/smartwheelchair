@@ -4,7 +4,7 @@ BLDC 모터(70W 이상 고출력, 2개), 초음파센서( 2개 ), LiDar, IMU(=mp
 
 ## Getting Started
 ```
-$ git clone https://github.com/KKimj/PerformanceFuzzer
+$ git clone https://github.com/KKimj/smartwheelchair
 ```
 
 ### Prerequisites
