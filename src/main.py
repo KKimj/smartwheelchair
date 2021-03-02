@@ -40,6 +40,32 @@ Sonic_PORT_left = '/dev/serial0'
 Sonic_PORT_right = '/dev/serial1'
 # Sonic_right = Serial(Sonic_PORT_right, 115200, timeout = 3)
 
+class HC_SR04:
+    left_sensors = Serial('/dev/ttyUSB0', 115200, timeout = 3)
+    right_sensors = Serial('/dev/ttyUSB1', 115200, timeout = 3)
+    
+    @staticmethod
+    def getLeftSensors():
+        return list(map(int, HC_SR04.left_sensors.readline().decode('utf-8').strip().split()))
+
+    @staticmethod
+    def getRightSensors():
+        return list(map(int, HC_SR04.right_sensors.readline().decode('utf-8').strip().split()))
+        
+    @staticmethod
+    def getFront():
+        return HC_SR04.getLeftSensors()[:2] + HC_SR04.getRightSensors()[:2]
+    
+    @staticmethod
+    def getLeftside():
+        return HC_SR04.getLeftSensors()[2:]
+    
+    @staticmethod
+    def getRightside():
+        return HC_SR04.getRightSensors()[2:]
+    
+
+
 
 class SONIC2CAN:
     def __init__(self):
@@ -73,73 +99,120 @@ class SONIC2CAN:
 
 
 class WheelChair:
-    def leftSpeed(self, speed):
-        speed = str(speed)
-        Board_left.write(bytes(speed.encode()))
+    speed = 0
+
+    def accelerate(self):
+        if self.isObstacle_Front() == True:
+            self.stop()
+            return
+
+        WheelChair.speed = WheelChair.speed + 200
+        self.leftSpeed(WheelChair.speed)
+        self.rightSpeed(WheelChair.speed)
+
+    def leftSpeed(self, _speed):
+        _speed = str(_speed)
+        Board_left.write(bytes(_speed.encode()))
         time.sleep(0.3)
 
-    def rightSpeed(self, speed):
-        speed = str(speed)
-        Board_right.write(bytes(speed.encode()))
+    def rightSpeed(self, _speed):
+        _speed = str(_speed)
+        Board_right.write(bytes(_speed.encode()))
         time.sleep(0.3)
 
     def stop(self):
+        WheelChair.speed = 0
         self.leftSpeed(0)
         self.rightSpeed(0)
         
 
     def forward(self):
+        if self.isObstacle_Front() == True:
+            self.stop()
+            return 
+
+        WheelChair.speed = 1000
         self.leftSpeed(1000)
         self.rightSpeed(1000)
         
 
     def backward(self):
+        WheelChair.speed = -1000
         self.leftSpeed(-1000)
         self.rightSpeed(-1000)
 
     def left(self):
+        if self.isObstacle_Left() == True:
+            self.stop()
+            return
+
         self.leftSpeed(-1000)
         self.rightSpeed(1000)
 
     def right(self):
+        if self.isObstacle_right() == True:
+            self.stop()
+            return
+        
         self.leftSpeed(1000)
         self.rightSpeed(-1000)
 
-    def isObstacle(self):
-        pass
+    def isObstacle_Front(self):
+        if min(HC_SR04.getFront()) <= 20 :
+            return True
+        else :
+            return False
+
+    def isObstacle_Left(self):
+        if min(HC_SR04.getLeftside()) <= 20 :
+            return True
+        else :
+            return False
+
+    def isObstacle_right(self):
+        if min(HC_SR04.getRightside()) <= 20 :
+            return True
+        else :
+            return False
+    
 
     def run(self):
         pass
 
     def test(self):
         while True:
-            mode = int(input('1 : Forward 2: Backward 3: Left 4: Right 5: Quit'))
+            mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate'))
+            if mode == 0:
+                break
+
             if mode == 1:
                 self.forward()
                 time.sleep(1)
                 self.stop()
             if mode == 2:
-                self.forward()
+                self.backward()
                 time.sleep(1)
                 self.stop()
             if mode == 3:
-                self.forward()
+                self.left()
                 time.sleep(1)
                 self.stop()
             if mode == 4:
-                self.forward()
+                self.right()
                 time.sleep(1)
                 self.stop()
+            
             if mode == 5:
-                break
+                self.accelerate()
+            
 
 
 def main():
     wheelChair = WheelChair()
     wheelChair.test()
 
-    sonic2can = SONIC2CAN()
-    sonic2can.test()
+    # sonic2can = SONIC2CAN()
+    # sonic2can.test()
 
     while True:
         wheelChair.run()
