@@ -150,7 +150,7 @@ class WheelChair:
         self.rightSpeed(1000)
 
     def right(self):
-        if self.isObstacle_right() == True:
+        if self.isObstacle_Right() == True:
             self.stop()
             return
         
@@ -169,7 +169,7 @@ class WheelChair:
         else :
             return False
 
-    def isObstacle_right(self):
+    def isObstacle_Right(self):
         if min(HC_SR04.getRightside()) <= 20 :
             return True
         else :
