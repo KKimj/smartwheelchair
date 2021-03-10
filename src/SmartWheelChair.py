@@ -25,4 +25,16 @@ class SmartWheelChair:
     
     @staticmethod
     def Run():
-        pass
+        while True:
+            if SmartWheelChair.isObstacle_Front():
+                Motor.Stop()
+            
+            elif SmartWheelChair.isObstacle_Left():
+                Motor.TurnRight()
+            
+            elif SmartWheelChair.isObstacle_Right():
+                Motor.TurnRight()
+            
+            else:
+                Motor.Forward()
+            

@@ -55,10 +55,16 @@ class Motor:
         Motor.setRightSpeed(0)
         
     @staticmethod
-    def Forward():
-        Motor.speed = 1000
-        Motor.setLeftSpeed(1000)
-        Motor.setRightSpeed(1000)
+    def Forward(isHighSpeed = False):
+        Motor.speed = 100
+        Motor.setLeftSpeed(Motor.speed)
+        Motor.setRightSpeed(Motor.speed)
+
+        if isHighSpeed:
+            Motor.speed = 1000
+            Motor.setLeftSpeed(Motor.speed)
+            Motor.setRightSpeed(Motor.speed)
+        
         
     @staticmethod
     def Backward():
