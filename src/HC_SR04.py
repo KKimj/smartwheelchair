@@ -9,24 +9,28 @@ class HC_SR04_quad:
     
 
     @staticmethod
-    def setSerialPort(_leftPort = '/dev/ttyUSB0', _rightPort = '/dev/ttyUSB1'):
-        HC_SR04_quad.closeSerial()
+    def setSerialPort(leftPort = '/dev/ttyUSB0', rightPort = '/dev/ttyUSB1'):
+        HC_SR04_quad.CloseSerial()
 
         HC_SR04_quad.leftPort = _leftPort
         HC_SR04_quad.rightPort = _rightPort
 
-        HC_SR04_quad.openSerial()
+        HC_SR04_quad.OpenSerial()
                     
     @staticmethod
-    def openSerial():
+    def OpenSerial():
         HC_SR04_quad.left_sensors = Serial(HC_SR04_quad.leftPort, 115200, timeout = 3)
         HC_SR04_quad.right_sensors = Serial(HC_SR04_quad.rightPort, 115200, timeout = 3)
     
     @staticmethod
-    def closeSerial():
+    def CloseSerial():
         HC_SR04_quad.left_sensors.close()
         HC_SR04_quad.right_sensors.close()
 
+    @staticmethod
+    def Switch():
+        HC_SR04_quad.setSerialPort(leftPort=HC_SR04_quad.rightPort, rightPort=HC_SR04_quad.leftPort)
+    
         
     @staticmethod
     def getLeftSensors():

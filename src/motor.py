@@ -11,24 +11,29 @@ class Motor:
     speed = 0
     
     @staticmethod
-    def openSerial():    
+    def setSerialPort(leftPort = '/dev/ttyACM0', rightPort = '/dev/ttyACM1'):
+        Motor.CloseSerial()
+
+        Motor.leftPort = leftPort
+        Motor.rightPort = rightPort
+
+        Motor.OpenSerial()
+
+    @staticmethod
+    def OpenSerial():    
         Motor.leftBoard = Serial(Motor.leftPort, 115200, timeout = 3)
         Motor.rightBoard = Serial(Motor.rightPort, 115200, timeout = 3)
 
     @staticmethod
-    def closeSerial():   
+    def CloseSerial():   
         Motor.leftBoard.close()
         Motor.rightBoard.close()
 
-
     @staticmethod
-    def setSerialPort(_leftPort = '/dev/ttyACM0', _rightPort = '/dev/ttyACM1'):
-        Motor.closeSerial()
-
-        Motor.leftPort = _leftPort
-        Motor.rightPort = _rightPort
-
-        Motor.openSerial()
+    def Switch():
+        Motor.setSerialPort(leftPort=Motor.rightPort, rightPort=Motor.leftPort)
+    
+        
 
     @staticmethod
     def setLeftSpeed(_speed):
@@ -85,7 +90,7 @@ class Motor:
     @staticmethod
     def Test():
         while True:
-            mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate'))
+            mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate 6 : Swtich left/right'))
             if mode == 0:
                 break
 
@@ -108,4 +113,8 @@ class Motor:
             
             if mode == 5:
                 Motor.Accelerate()
+
+            if mode == 6:
+                Motor.Switch()
+            
             

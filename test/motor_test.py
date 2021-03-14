@@ -6,6 +6,6 @@ from src.motor import Motor
 
 
 if __name__ == '__main__':
-    Motor.openSerial()
+    Motor.OpenSerial()
     Motor.Test()
-    Motor.closeSerial()
+    Motor.CloseSerial()
