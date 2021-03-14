@@ -4,7 +4,7 @@ import time
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
-import src.HC_SR04
+from src.HC_SR04 import HC_SR04_quad
 
 if __name__ == '__main__':
     HC_SR04_quad.openSerial()
