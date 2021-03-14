@@ -12,8 +12,8 @@ class HC_SR04_quad:
     def setSerialPort(leftPort = '/dev/ttyUSB0', rightPort = '/dev/ttyUSB1'):
         HC_SR04_quad.CloseSerial()
 
-        HC_SR04_quad.leftPort = _leftPort
-        HC_SR04_quad.rightPort = _rightPort
+        HC_SR04_quad.leftPort = leftPort
+        HC_SR04_quad.rightPort = rightPort
 
         HC_SR04_quad.OpenSerial()
                     
