@@ -1,7 +1,39 @@
 from serial import Serial
 import time
 
+class _SerialDevice:
+    def __init__(self, port, baudrate, timeout = 3, open = False):
+        self.port = port
+        self.baudrate = baudrate
+        self.timeout = timeout
+        self.serial = None
+        if open:
+            self.open_serial()
+    
+    def open_serial(self):
+        if not self.serial:
+            self.close_serial()
+        self.serial = Serial(self.port, self.baudrate, self.timeout)
+
+    def close_serial(self):
+        if self.serial:
+            self.serial.close()
+        self.serial = None
+
+    def write(self, message):
+        if self.serial:
+            if type(message) is not str:
+                message = str(message)
+            self.serial.write(bytes(message.encode()))
+    
+    def readline(self):
+        if self.serial:
+            return self.serial.readline().decode('utf-8').strip()
+
 class Motor:
+    pass
+
+class Motor_:
     leftPort = '/dev/ttyACM0'
     rightPort = '/dev/ttyACM1'
 
