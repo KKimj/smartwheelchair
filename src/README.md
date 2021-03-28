@@ -31,7 +31,7 @@
 
 ## Lidar map
 
-## Load condition sensing
+## Road condition sensing
 
 
 ## References
