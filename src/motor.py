@@ -95,7 +95,6 @@ class Motor_fair:
         self.set_speed(speed)
         
         
-    @staticmethod
     def backward(self, speed = -100, is_highspeed = False):
         if is_highspeed:
             speed = -1000
