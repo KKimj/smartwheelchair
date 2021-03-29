@@ -14,7 +14,7 @@ def get_arguments():
 
     parser.add_argument('--joystick', '-joy', help='Control by joystick', action="store_true")
     parser.add_argument('--bluetooth', '-bt', help='Use Bluetooth Protocol for Controller', action="store_true")
-    parser.add_argument('--testmode', '-test', help='Test mode', action="store_true")
+    parser.add_argument('--testmode', '-test', help='Test(=verbose) mode', action="store_true")
     parser.add_argument('--thread', '-thread', help='Use Multithreading for input handling', action="store_true")
     parser.add_argument('--onlymotor', '-omotor', help='Without sensor handling', action="store_true")
     
