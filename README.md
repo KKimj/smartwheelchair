@@ -18,7 +18,7 @@ optional arguments:
   --bluetooth, -bt      Use Bluetooth Protocol for Controller
   --testmode, -test     Test(=verbose) mode
   --thread, -thread     Use Multithreading for input handling
-  --onlymotor, -omotor  Without sensor handling
+  --onlymotor, -motor  Without sensor handling
 ```
 
 
