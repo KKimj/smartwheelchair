@@ -1,40 +1,43 @@
-from HC_SR04 import HC_SR04_quad
-from motor import Motor
+from HC_SR04 import HC_SR04_fair
+from motor import Motor_fair
 
 class SmartWheelChair:
-    @staticmethod
-    def isObstacle_Front():
-        if min(HC_SR04_quad.getFront()) <= 20 :
+    def __init__(self):
+        self.HC_SR04 = HC_SR04_fair()
+        self.motor = Motor_fair()
+
+    def is_obstacle_front(self):
+        if min(self.HC_SR04.get_front()) <= 20 :
             return True
         else :
             return False
 
-    @staticmethod
-    def isObstacle_Left():
-        if min(HC_SR04_quad.getLeftside()) <= 20 :
+    
+    def is_obstacle_left(self):
+        if min(self.HC_SR04.get_leftside()) <= 20 :
             return True
         else :
             return False
 
-    @staticmethod
-    def isObstacle_Right():
-        if min(HC_SR04_quad.getRightside()) <= 20 :
+    
+    def is_obstacle_right(self):
+        if min(self.HC_SR04.get_rightside()) <= 20 :
             return True
         else :
             return False
     
-    @staticmethod
-    def Run():
+    
+    def Run(self, is_multithreading = False):
         while True:
-            if SmartWheelChair.isObstacle_Front():
-                Motor.Stop()
+            if self.is_obstacle_front():
+                self.motor.stop()
             
-            elif SmartWheelChair.isObstacle_Left():
-                Motor.TurnRight()
+            elif self.is_obstacle_left():
+                self.motor.turn_right()
             
-            elif SmartWheelChair.isObstacle_Right():
-                Motor.TurnRight()
+            elif self.is_obstacle_right():
+                self.motor.turn_left()
             
             else:
-                Motor.Forward()
+                self.motor.forward()
             
