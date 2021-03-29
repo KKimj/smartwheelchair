@@ -5,7 +5,21 @@ BLDC 모터(70W 이상 고출력, 2개), 초음파센서( 2개 ), LiDar, IMU(=mp
 ## Getting Started
 ```
 $ git clone https://github.com/KKimj/smartwheelchair
+$ sudo python3 ./src/main.py
 ```
+## Usage
+```
+usage: main.py [-h] [--joystick] [--bluetooth] [--testmode] [--thread] [--onlymotor]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --joystick, -joy      Control by joystick
+  --bluetooth, -bt      Use Bluetooth Protocol for Controller
+  --testmode, -test     Test(=verbose) mode
+  --thread, -thread     Use Multithreading for input handling
+  --onlymotor, -omotor  Without sensor handling
+```
+
 
 ### Prerequisites
 ```
@@ -64,6 +78,7 @@ $ pip3 install pyrealsense2
 ```
 $ python3 ./smartwheelchair/src/test/test.py
 ```
+
 
 ## Acknowledgments
 https://github.com/sparkfun/SparkFun_MPU-9250_Breakout_Arduino_Library
