@@ -27,7 +27,12 @@ class SmartWheelChair:
             return False
     
     
-    def Run(self, is_multithreading = False):
+    def Run(self, is_multithreading = False, is_only_motor = False):
+        if is_only_motor:
+            self.motor.test()
+            self.motor.run()
+            return
+        
         while True:
             if self.is_obstacle_front():
                 self.motor.stop()

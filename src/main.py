@@ -4,9 +4,9 @@ from smartwheelchair import SmartWheelChair
 
 def main(args):
     print('SmartWheelChair now running...')
-    SmartWheelChair().Run(is_multithreading = args.thread)
-    # print(args)
-    # print(args.thread, args.bluetooth, args.joystick, args.testmode)
+    if args.testmode:
+        print(args)
+    SmartWheelChair().Run(is_multithreading = args.thread, is_only_motor = args.onlymotor)
 
 
 def get_arguments():
@@ -16,6 +16,8 @@ def get_arguments():
     parser.add_argument('--bluetooth', '-bt', help='Use Bluetooth Protocol for Controller', action="store_true")
     parser.add_argument('--testmode', '-test', help='Test mode', action="store_true")
     parser.add_argument('--thread', '-thread', help='Use Multithreading for input handling', action="store_true")
+    parser.add_argument('--onlymotor', '-omotor', help='Without sensor handling', action="store_true")
+    
     
     args = parser.parse_args()
     return args
