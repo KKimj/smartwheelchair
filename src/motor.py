@@ -11,16 +11,9 @@ class Motor(USBSerial):
         self.serial = None
         if open:
             self.open_serial()
-    # TODO 
+
 
 class Motor_fair:
-    leftPort = '/dev/ttyACM0'
-    rightPort = '/dev/ttyACM1'
-
-    leftBoard = None
-    rightBoard = None
-
-    speed = 0
     def __init__(self, port_left = '/dev/ttyACM0', port_right = '/dev/ttyACM1', baudrate = 115200, timeout = 3, open = True):
         self.left = Motor(port=port_left, baudrate=baudrate, timeout=timeout, open=open)
         self.right = Motor(port=port_right, baudrate=baudrate, timeout=timeout, open=open)
@@ -90,12 +83,18 @@ class Motor_fair:
         
     
     def forward(self, speed = 100, is_highspeed = False):
+        '''
+        Not recommend to use is_highspeed option
+        '''
         if is_highspeed:
             speed = 1000
         self.set_speed(speed)
         
-        
+
     def backward(self, speed = -100, is_highspeed = False):
+        '''
+        Not recommend to use is_highspeed option
+        '''
         if is_highspeed:
             speed = -1000
         self.set_speed(speed)
@@ -110,8 +109,7 @@ class Motor_fair:
         self.set_speed_left(speed)
         self.set_speed_right(-speed)
     
-
-    def test(self):
+    def run(self):
         while True:
             mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate 6 : Swtich left/right'))
             if mode == 0:
@@ -140,3 +138,8 @@ class Motor_fair:
             if mode == 6:
                 self.switch()
             
+    def test(self):
+        print('** check left **')
+        self.left.test()
+        print('** check left **')
+        self.right.test()
