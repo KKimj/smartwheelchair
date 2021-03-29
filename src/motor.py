@@ -1,39 +1,19 @@
 from serial import Serial
+from usbserial import USBSerial
 import time
 
-class _SerialDevice:
-    def __init__(self, port, baudrate, timeout = 3, open = False):
-        self.port = port
-        self.baudrate = baudrate
-        self.timeout = timeout
+
+class Motor(USBSerial):
+    def __init__(self, port, baudrate = 115200, timeout = 3, open = False):
+        self._port = port
+        self._baudrate = baudrate
+        self._timeout = timeout
         self.serial = None
         if open:
             self.open_serial()
-    
-    def open_serial(self):
-        if not self.serial:
-            self.close_serial()
-        self.serial = Serial(self.port, self.baudrate, self.timeout)
+    # TODO 
 
-    def close_serial(self):
-        if self.serial:
-            self.serial.close()
-        self.serial = None
-
-    def write(self, message):
-        if self.serial:
-            if type(message) is not str:
-                message = str(message)
-            self.serial.write(bytes(message.encode()))
-    
-    def readline(self):
-        if self.serial:
-            return self.serial.readline().decode('utf-8').strip()
-
-class Motor:
-    pass
-
-class Motor_:
+class Motor_fair:
     leftPort = '/dev/ttyACM0'
     rightPort = '/dev/ttyACM1'
 
@@ -41,112 +21,123 @@ class Motor_:
     rightBoard = None
 
     speed = 0
+    def __init__(self, port_left = '/dev/ttyACM0', port_right = '/dev/ttyACM1', baudrate = 115200, timeout = 3, open = True):
+        self.left = Motor(port=port_left, baudrate=baudrate, timeout=timeout, open=open)
+        self.right = Motor(port=port_right, baudrate=baudrate, timeout=timeout, open=open)
+        self.speed = 0
+        self.speed_left = 0
+        self.speed_right = 0
+
+
+    def open_serial(self):
+        self.left.open_serial()
+        self.right.open_serial()
+
+    def close_serial(self):
+        self.left.close_serial()
+        self.right.close_serial()
     
-    @staticmethod
-    def setSerialPort(leftPort = '/dev/ttyACM0', rightPort = '/dev/ttyACM1'):
-        Motor.CloseSerial()
-
-        Motor.leftPort = leftPort
-        Motor.rightPort = rightPort
-
-        Motor.OpenSerial()
-
-    @staticmethod
-    def OpenSerial():    
-        Motor.leftBoard = Serial(Motor.leftPort, 115200, timeout = 3)
-        Motor.rightBoard = Serial(Motor.rightPort, 115200, timeout = 3)
-
-    @staticmethod
-    def CloseSerial():   
-        Motor.leftBoard.close()
-        Motor.rightBoard.close()
-
-    @staticmethod
-    def Switch():
-        Motor.setSerialPort(leftPort=Motor.rightPort, rightPort=Motor.leftPort)
+    def set_port(self, port_left, port_right, open=True):
+        self.close_serial()
+        self.left = Motor(port=port_left, baudrate=self.left.baudrate, timeout=self.left.timeout, open=open)
+        self.right = Motor(port=port_right, baudrate=self.right.baudrate, timeout=self.right.timeout, open=open)
+        self.open_serial()
+        
     
+    def switch(self):
+        '''
+        Swtich left to right, right to left
+        '''
+        tmp = self.left
+        self.left = self.right
+        self.right = tmp
         
 
-    @staticmethod
-    def setLeftSpeed(_speed):
-        _speed = str(_speed)
-        Motor.leftBoard.write(bytes(_speed.encode()))
+    def set_speed(self, speed):
+        if type(speed) is not type(str):
+            speed = str(speed)
+        self.left.write(speed)
+        self.right.write(speed)
+        self.speed = speed
+        self.speed_left = speed
+        self.speed_right = speed
+        time.sleep(0.3)
+    
+    def set_speed_left(self, speed):
+        if type(speed) is not type(str):
+            speed = str(speed)
+        self.left.write(speed)
+        self.speed_left = speed
         time.sleep(0.3)
 
-    @staticmethod
-    def setRightSpeed(_speed):
-        _speed = str(_speed)
-        Motor.rightBoard.write(bytes(_speed.encode()))
-        time.sleep(0.3)
+    def set_speed_right(self, speed):
+        if type(speed) is not type(str):
+            speed = str(speed)
+        self.right.write(speed)
+        self.speed_right = speed
 
-    @staticmethod
-    def Accelerate():
-        Motor.speed = Motor.speed + 200
-        Motor.setLeftSpeed(Motor.speed)
-        Motor.setRightSpeed(Motor.speed)
 
-    @staticmethod
-    def Stop():
-        Motor.speed = 0
-        Motor.setLeftSpeed(0)
-        Motor.setRightSpeed(0)
-        
-    @staticmethod
-    def Forward(isHighSpeed = False):
-        Motor.speed = 100
-        Motor.setLeftSpeed(Motor.speed)
-        Motor.setRightSpeed(Motor.speed)
-
-        if isHighSpeed:
-            Motor.speed = 1000
-            Motor.setLeftSpeed(Motor.speed)
-            Motor.setRightSpeed(Motor.speed)
-        
-        
-    @staticmethod
-    def Backward():
-        Motor.speed = -1000
-        Motor.setLeftSpeed(-1000)
-        Motor.setRightSpeed(-1000)
-
-    @staticmethod
-    def TurnLeft():
-        Motor.setLeftSpeed(-1000)
-        Motor.setRightSpeed(1000)
-
-    @staticmethod
-    def TurnRight():
-        Motor.setLeftSpeed(1000)
-        Motor.setRightSpeed(-1000)
     
+    def accel(self, offset = 50):
+        self.set_speed(self.speed+offset)
+
+    def stop(self):
+        while self.speed > 10:
+            self.speed -= 10
+            self.set_speed(self.speed)
+            time.sleep(0.01)
+        self.set_speed(0)
+        
+    
+    def forward(self, speed = 100, is_highspeed = False):
+        if is_highspeed:
+            speed = 1000
+        self.set_speed(speed)
+        
+        
     @staticmethod
-    def Test():
+    def backward(self, speed = -100, is_highspeed = False):
+        if is_highspeed:
+            speed = -1000
+        self.set_speed(speed)
+
+    
+    def turn_left(self, speed = 100):
+        self.set_speed_left(-speed)
+        self.set_speed_right(speed)
+
+    
+    def turn_right(self, speed = 100):
+        self.set_speed_left(speed)
+        self.set_speed_right(-speed)
+    
+
+    def test(self):
         while True:
             mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate 6 : Swtich left/right'))
             if mode == 0:
                 break
 
             if mode == 1:
-                Motor.Forward()
+                self.forward()
                 time.sleep(1)
-                Motor.Stop()
+                self.stop()
             if mode == 2:
-                Motor.Backward()
+                self.backward()
                 time.sleep(1)
-                Motor.Stop()
+                self.stop()
             if mode == 3:
-                Motor.TurnLeft()
+                self.turn_left()
                 time.sleep(1)
-                Motor.Stop()
+                self.stop()
             if mode == 4:
-                Motor.TurnRight()
+                self.turn_right()
                 time.sleep(1)
-                Motor.Stop()
+                self.stop()
             
             if mode == 5:
-                Motor.Accelerate()
+                self.accel()
 
             if mode == 6:
-                Motor.Switch()
-            
+                self.switch()
             
