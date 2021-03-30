@@ -132,5 +132,6 @@ class HC_SR04_fair():
         self.test_right()
 
     def run(self):
+        self.open_serial()
         while True:
             print('left :', self.get_left_sensors(), 'right :', self.get_right_sensors())
