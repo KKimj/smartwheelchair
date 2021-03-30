@@ -47,13 +47,16 @@ class Motor_fair:
         
 
     def set_speed(self, speed):
+        speed = int(speed)
+        self.speed = speed
+        self.speed_left = speed
+        self.speed_right = speed
+
         if type(speed) is not type(str):
             speed = str(speed)
         self.left.write(speed)
         self.right.write(speed)
-        self.speed = speed
-        self.speed_left = speed
-        self.speed_right = speed
+        
         time.sleep(0.3)
     
     def set_speed_left(self, speed):
