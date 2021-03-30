@@ -14,12 +14,14 @@ class Motor(USBSerial):
 
 
 class Motor_fair:
-    def __init__(self, port_left = '/dev/ttyACM0', port_right = '/dev/ttyACM1', baudrate = 115200, timeout = 3, open = True):
+    def __init__(self, port_left = '/dev/ttyACM0', port_right = '/dev/ttyACM1', baudrate = 115200, timeout = 3, open = True, is_reverse_left = False, is_reverse_right = True):
         self.left = Motor(port=port_left, baudrate=baudrate, timeout=timeout, open=open)
         self.right = Motor(port=port_right, baudrate=baudrate, timeout=timeout, open=open)
         self.speed = 0
         self.speed_left = 0
         self.speed_right = 0
+        
+        self.is_reverse = [is_reverse_left, is_reverse_right]
 
 
     def open_serial(self):
@@ -49,28 +51,25 @@ class Motor_fair:
     def set_speed(self, speed):
         speed = int(speed)
         self.speed = speed
-        self.speed_left = speed
-        self.speed_right = speed
-
-        if type(speed) is not type(str):
-            speed = str(speed)
-        self.left.write(speed)
-        self.right.write(speed)
-        
-        time.sleep(0.3)
+        self.set_speed_left(speed)
+        self.set_speed_right(speed)
     
     def set_speed_left(self, speed):
-        if type(speed) is not type(str):
-            speed = str(speed)
+        self.speed_left = int(speed)
+        
+        if self.is_reverse[0]:
+            speed *= -1
         self.left.write(speed)
-        self.speed_left = speed
         time.sleep(0.3)
 
     def set_speed_right(self, speed):
-        if type(speed) is not type(str):
-            speed = str(speed)
+        self.speed_right = int(speed)
+
+        if self.is_reverse[1]:
+            speed *= -1
         self.right.write(speed)
-        self.speed_right = speed
+        time.sleep(0.3)
+
 
 
     
@@ -81,7 +80,7 @@ class Motor_fair:
         while self.speed > 10:
             self.speed -= 10
             self.set_speed(self.speed)
-            time.sleep(0.01)
+            time.sleep(0.1)
         self.set_speed(0)
         
     
@@ -116,6 +115,8 @@ class Motor_fair:
         while True:
             mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate 6 : Swtich left/right'))
             if mode == 0:
+                self.stop()
+                time.sleep(1)
                 break
 
             if mode == 1:
@@ -136,9 +137,12 @@ class Motor_fair:
                 self.stop()
             
             if mode == 5:
-                self.accel()
+                offset = int(input('Enter offset').strip())
+                self.accel(offset)
+                print('now speed : %d'%(self.speed))
 
             if mode == 6:
+                self.stop()
                 self.switch()
             
     def test(self):
