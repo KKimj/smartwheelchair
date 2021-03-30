@@ -27,10 +27,18 @@ class SmartWheelChair:
             return False
     
     
-    def Run(self, is_multithreading = False, is_only_motor = False):
-        if is_only_motor:
+    def Run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False):
+        if only_option == 'motor':
             self.motor.test()
             self.motor.run()
+            return
+        
+        if only_option == 'snoic':
+            self.HC_SR04.test()
+            
+            return
+        
+        if len(only_option.strip()) is not 0:
             return
         
         while True:

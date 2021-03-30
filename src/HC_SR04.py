@@ -130,3 +130,7 @@ class HC_SR04_fair():
         self.test_left()
         print('** check right **')
         self.test_right()
+
+    def run(self):
+        while True:
+            print('left :', self.get_left_sensors(), 'right :', self.get_right_sensors())
