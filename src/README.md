@@ -1,7 +1,13 @@
 # Dev
+
+## CPU Architecture
+* cpu architecture 
+    * ```$ dpkg --print-architecture```
+    ![cpu_arch_screen](https://raw.githubusercontent.com/KKimj/smartwheelchair/main/images/screenshots/screenshot3.png?raw=true "Title")
+
 ## Operating System
 
-[18.04.05 LTS for rpi4](http://old-releases.ubuntu.com/releases/18.04.0/ubuntu-18.04.4-preinstalled-server-arm64+raspi4.img.xz)
+[18.04.05 LTS for arm64 raspi4](http://old-releases.ubuntu.com/releases/18.04.0/ubuntu-18.04.4-preinstalled-server-arm64+raspi4.img.xz)
 
 - http://old-releases.ubuntu.com/releases/18.04.0/ubuntu-18.04.4-preinstalled-server-arm64+raspi4.img.xz
 
