@@ -35,7 +35,7 @@ class SmartWheelChair:
         
         if only_option == 'snoic':
             self.HC_SR04.test()
-            
+            self.HC_SR04.run()
             return
         
         if len(only_option.strip()) is not 0:
