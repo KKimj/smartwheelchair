@@ -3,7 +3,7 @@ from motor import Motor_fair
 
 class SmartWheelChair:
     def __init__(self):
-        self.HC_SR04 = HC_SR04_fair()
+        self.HC_SR04 = HC_SR04_fair(channel = 4)
         self.motor = Motor_fair()
 
     def is_obstacle_front(self):
@@ -28,19 +28,20 @@ class SmartWheelChair:
     
     
     def Run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False):
-        if only_option == 'motor':
-            self.motor.test()
-            self.motor.run()
+        if type(only_option) == str: 
+            if only_option == 'motor':
+                self.motor.test()
+                self.motor.run()
+                
+            if only_option == 'sonic':
+                self.HC_SR04.test()
+                self.HC_SR04.run()
+            
+            if only_option == 'sonicdebug':
+                self.HC_SR04.test()
+                self.HC_SR04.run(debug = True)
             return
-        
-        if only_option == 'sonic':
-            self.HC_SR04.test()
-            self.HC_SR04.run()
-            return
-        
-        if len(only_option.strip()) is not 0:
-            return
-        
+         
         while True:
             if self.is_obstacle_front():
                 self.motor.stop()

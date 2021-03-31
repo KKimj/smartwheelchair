@@ -69,7 +69,7 @@ class HC_SR04_fair():
         '''
         Front Sensor are 1, 2, 3 ...
         '''
-        return self.left.get()[:self.channel//2]+ self.right.getData()[:self.channel//2]
+        return self.left.get()[:self.channel//2]+ self.right.get()[:self.channel//2]
     
     def get_leftside(self):
         '''
@@ -131,7 +131,9 @@ class HC_SR04_fair():
         print('** check right **')
         self.test_right()
 
-    def run(self):
+    def run(self, debug = False):
         self.open_serial()
         while True:
             print('left :', self.get_left_sensors(), 'right :', self.get_right_sensors())
+            if debug:
+                print('Front :', self.get_front(), 'Leftside :', self.get_leftside(), 'Rightside :', self.get_rightside())
