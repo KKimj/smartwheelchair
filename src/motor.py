@@ -60,7 +60,7 @@ class Motor_fair:
         if self.is_reverse[0]:
             speed *= -1
         self.left.write(speed)
-        time.sleep(0.3)
+        time.sleep(0.5)
 
     def set_speed_right(self, speed):
         self.speed_right = int(speed)
@@ -68,7 +68,7 @@ class Motor_fair:
         if self.is_reverse[1]:
             speed *= -1
         self.right.write(speed)
-        time.sleep(0.3)
+        time.sleep(0.5)
 
 
 
@@ -76,29 +76,28 @@ class Motor_fair:
     def accel(self, offset = 50):
         self.set_speed(self.speed+offset)
 
-    def stop(self):
-        while self.speed > 10:
+    def stop(self, is_slowdown = False):
+        while self.speed > 10 and is_slowdown:
             self.speed -= 10
             self.set_speed(self.speed)
-            time.sleep(0.1)
         self.set_speed(0)
         
     
-    def forward(self, speed = 100, is_highspeed = False):
+    def forward(self, speed = 50, is_highspeed = False):
         '''
         Not recommend to use is_highspeed option
         '''
         if is_highspeed:
-            speed = 1000
+            speed = 100
         self.set_speed(speed)
         
 
-    def backward(self, speed = -100, is_highspeed = False):
+    def backward(self, speed = -50, is_highspeed = False):
         '''
         Not recommend to use is_highspeed option
         '''
         if is_highspeed:
-            speed = -1000
+            speed = -100
         self.set_speed(speed)
 
     
@@ -116,7 +115,6 @@ class Motor_fair:
             mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate 6 : Swtich left/right'))
             if mode == 0:
                 self.stop()
-                time.sleep(1)
                 break
 
             if mode == 1:
