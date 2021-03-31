@@ -27,7 +27,7 @@ class SmartWheelChair:
             return False
     
     
-    def Run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False):
+    def Run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False):
         if type(only_option) == str: 
             if only_option == 'motor':
                 self.motor.test()
@@ -40,6 +40,14 @@ class SmartWheelChair:
             if only_option == 'sonicdebug':
                 self.HC_SR04.test()
                 self.HC_SR04.run(debug = True)
+
+            if only_option == 'forward':
+                while True:
+                    if self.is_obstacle_front():
+                        self.motor.stop()
+                    else:
+                        self.motor.forward(fastmode = fastmode)
+
             return
          
         while True:

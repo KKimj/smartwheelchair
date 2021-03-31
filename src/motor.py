@@ -83,20 +83,20 @@ class Motor_fair:
         self.set_speed(0)
         
     
-    def forward(self, speed = 50, is_highspeed = False):
+    def forward(self, speed = 50, fastmode = False):
         '''
-        Not recommend to use is_highspeed option
+        recommend NOT to use fastmode option
         '''
-        if is_highspeed:
+        if fastmode:
             speed = 100
         self.set_speed(speed)
         
 
-    def backward(self, speed = -50, is_highspeed = False):
+    def backward(self, speed = -50, fastmode = False):
         '''
-        Not recommend to use is_highspeed option
+        recommend NOT to use fastmode option
         '''
-        if is_highspeed:
+        if fastmode:
             speed = -100
         self.set_speed(speed)
 
