@@ -119,19 +119,19 @@ class Motor_fair:
 
             if mode == 1:
                 self.forward()
-                time.sleep(1)
+                time.sleep(3)
                 self.stop()
             if mode == 2:
                 self.backward()
-                time.sleep(1)
+                time.sleep(3)
                 self.stop()
             if mode == 3:
                 self.turn_left()
-                time.sleep(1)
+                time.sleep(3)
                 self.stop()
             if mode == 4:
                 self.turn_right()
-                time.sleep(1)
+                time.sleep(3)
                 self.stop()
             
             if mode == 5:
