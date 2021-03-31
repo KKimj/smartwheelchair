@@ -115,6 +115,7 @@ class Motor_fair:
             mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate 6 : Swtich left/right'))
             if mode == 0:
                 self.stop()
+                self.close_serial()
                 break
 
             if mode == 1:

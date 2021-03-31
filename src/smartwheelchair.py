@@ -33,7 +33,7 @@ class SmartWheelChair:
             self.motor.run()
             return
         
-        if only_option == 'snoic':
+        if only_option == 'sonic':
             self.HC_SR04.test()
             self.HC_SR04.run()
             return
