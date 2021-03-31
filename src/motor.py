@@ -29,7 +29,10 @@ class Motor_fair:
         self.right.open_serial()
 
     def close_serial(self):
+        self.stop()
+        time.sleep(1)
         self.left.close_serial()
+        time.sleep(0.5)
         self.right.close_serial()
     
     def set_port(self, port_left, port_right, open=True):
@@ -48,8 +51,12 @@ class Motor_fair:
         self.right = tmp
         
 
-    def set_speed(self, speed):
+    def set_speed(self, speed, debug = False):
         speed = int(speed)
+        if self.speed == speed:
+            if debug:
+                print('already speed : %d'%(self.speed))
+            return
         self.speed = speed
         self.set_speed_left(speed)
         self.set_speed_right(speed)
@@ -74,31 +81,34 @@ class Motor_fair:
 
     
     def accel(self, offset = 50):
-        self.set_speed(self.speed+offset)
+        if self.speed < 150:
+            self.set_speed(self.speed+offset)
 
-    def stop(self, is_slowdown = False):
+    def stop(self, is_slowdown = False, close = False):
         while self.speed > 10 and is_slowdown:
             self.speed -= 10
             self.set_speed(self.speed)
         self.set_speed(0)
+        if close:
+            self.close_serial()
         
     
-    def forward(self, speed = 50, fastmode = False):
+    def forward(self, speed = 50, fastmode = False, debug = False):
         '''
         recommend NOT to use fastmode option
         '''
         if fastmode:
             speed = 100
-        self.set_speed(speed)
+        self.set_speed(speed, debug)
         
 
-    def backward(self, speed = -50, fastmode = False):
+    def backward(self, speed = -50, fastmode = False, debug = False):
         '''
         recommend NOT to use fastmode option
         '''
         if fastmode:
             speed = -100
-        self.set_speed(speed)
+        self.set_speed(speed, debug)
 
     
     def turn_left(self, speed = 100):

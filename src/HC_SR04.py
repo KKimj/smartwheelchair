@@ -1,4 +1,5 @@
 from usbserial import USBSerial
+import time
 
 class HC_SR04(USBSerial):
     def __init__(self, port = '/dev/ttyUSB0', baudrate = 115200, timeout = 3, channel = 1, open = False):
@@ -11,7 +12,9 @@ class HC_SR04(USBSerial):
         Getter to data from serial
         Must call OpenSerial() before to use this method
         '''
-        return list(map(int, super().readline().strip().split(separator)))
+        self.serial.reset_input_buffer()
+        ret = list(map(int, super().readline().strip().split(separator)))
+        return ret
 
     def test(self):
         '''
@@ -42,11 +45,15 @@ class HC_SR04_fair():
 
     def open_serial(self):
         self.left.open_serial()
+        time.sleep(0.1)
         self.right.open_serial()
+        time.sleep(0.1)
     
     def close_serial(self):
         self.left.close_serial()
+        time.sleep(0.1)
         self.right.close_serial()
+        time.sleep(0.1)
     
     def switch(self):
         '''
@@ -134,6 +141,7 @@ class HC_SR04_fair():
     def run(self, debug = False):
         self.open_serial()
         while True:
-            print('left :', self.get_left_sensors(), 'right :', self.get_right_sensors())
+            if not debug:
+                print('left :', self.get_left_sensors(), 'right :', self.get_right_sensors())
             if debug:
                 print('Front :', self.get_front(), 'Leftside :', self.get_leftside(), 'Rightside :', self.get_rightside())
