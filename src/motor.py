@@ -29,7 +29,10 @@ class Motor_fair:
         self.right.open_serial()
 
     def close_serial(self):
+        self.stop()
+        time.sleep(1)
         self.left.close_serial()
+        time.sleep(0.5)
         self.right.close_serial()
     
     def set_port(self, port_left, port_right, open=True):
@@ -48,8 +51,12 @@ class Motor_fair:
         self.right = tmp
         
 
-    def set_speed(self, speed):
+    def set_speed(self, speed, debug = False):
         speed = int(speed)
+        if self.speed == speed:
+            if debug:
+                print('already speed : %d'%(self.speed))
+            return
         self.speed = speed
         self.set_speed_left(speed)
         self.set_speed_right(speed)
@@ -60,7 +67,7 @@ class Motor_fair:
         if self.is_reverse[0]:
             speed *= -1
         self.left.write(speed)
-        time.sleep(0.3)
+        time.sleep(0.5)
 
     def set_speed_right(self, speed):
         self.speed_right = int(speed)
@@ -68,38 +75,40 @@ class Motor_fair:
         if self.is_reverse[1]:
             speed *= -1
         self.right.write(speed)
-        time.sleep(0.3)
+        time.sleep(0.5)
 
 
 
     
     def accel(self, offset = 50):
-        self.set_speed(self.speed+offset)
+        if self.speed < 150:
+            self.set_speed(self.speed+offset)
 
-    def stop(self):
-        while self.speed > 10:
+    def stop(self, is_slowdown = False, close = False):
+        while self.speed > 10 and is_slowdown:
             self.speed -= 10
             self.set_speed(self.speed)
-            time.sleep(0.1)
         self.set_speed(0)
+        if close:
+            self.close_serial()
         
     
-    def forward(self, speed = 100, is_highspeed = False):
+    def forward(self, speed = 50, fastmode = False, debug = False):
         '''
-        Not recommend to use is_highspeed option
+        recommend NOT to use fastmode option
         '''
-        if is_highspeed:
-            speed = 1000
-        self.set_speed(speed)
+        if fastmode:
+            speed = 100
+        self.set_speed(speed, debug)
         
 
-    def backward(self, speed = -100, is_highspeed = False):
+    def backward(self, speed = -50, fastmode = False, debug = False):
         '''
-        Not recommend to use is_highspeed option
+        recommend NOT to use fastmode option
         '''
-        if is_highspeed:
-            speed = -1000
-        self.set_speed(speed)
+        if fastmode:
+            speed = -100
+        self.set_speed(speed, debug)
 
     
     def turn_left(self, speed = 100):
@@ -116,24 +125,24 @@ class Motor_fair:
             mode = int(input('0: Quit, 1 : Forward, 2: Backward, 3: Left, 4: Right, 5 : acclerate 6 : Swtich left/right'))
             if mode == 0:
                 self.stop()
-                time.sleep(1)
+                self.close_serial()
                 break
 
             if mode == 1:
                 self.forward()
-                time.sleep(1)
+                time.sleep(3)
                 self.stop()
             if mode == 2:
                 self.backward()
-                time.sleep(1)
+                time.sleep(3)
                 self.stop()
             if mode == 3:
                 self.turn_left()
-                time.sleep(1)
+                time.sleep(3)
                 self.stop()
             if mode == 4:
                 self.turn_right()
-                time.sleep(1)
+                time.sleep(3)
                 self.stop()
             
             if mode == 5:
