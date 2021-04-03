@@ -1,7 +1,7 @@
 from serial import Serial
 
 class USBSerial:
-    def __init__(self, port, baudrate, timeout = 3, open = False):
+    def __init__(self, port, baudrate, timeout = 0.1, open = False):
         '''
         init method
         if open is set True then call open_serial()

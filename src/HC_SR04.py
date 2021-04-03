@@ -2,7 +2,7 @@ from usbserial import USBSerial
 import time
 
 class HC_SR04(USBSerial):
-    def __init__(self, port = '/dev/ttyUSB0', baudrate = 115200, timeout = 3, channel = 1, open = False):
+    def __init__(self, port = '/dev/ttyUSB0', baudrate = 115200, timeout = 0.1, channel = 1, open = False):
         super().__init__(port=port, baudrate=baudrate, timeout=timeout, open=open)
         self.channel = channel
     
@@ -27,7 +27,7 @@ class HC_SR04(USBSerial):
                 print('Channel : %s'%(self.channel))
 
 class HC_SR04_fair():
-    def __init__(self, port_left = '/dev/ttyUSB0', port_right = '/dev/ttyUSB1', baudrate = 115200, timeout = 3, channel = 1, open = False):
+    def __init__(self, port_left = '/dev/ttyUSB0', port_right = '/dev/ttyUSB1', baudrate = 115200, timeout = 0.1, channel = 1, open = False):
         '''
         left : Left Sensors
         right : Right Sensors

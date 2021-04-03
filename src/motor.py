@@ -4,7 +4,7 @@ import time
 
 
 class Motor(USBSerial):
-    def __init__(self, port, baudrate = 115200, timeout = 3, open = False):
+    def __init__(self, port, baudrate = 115200, timeout = 0.1, open = False):
         self._port = port
         self._baudrate = baudrate
         self._timeout = timeout
@@ -14,7 +14,7 @@ class Motor(USBSerial):
 
 
 class Motor_fair:
-    def __init__(self, port_left = '/dev/ttyACM0', port_right = '/dev/ttyACM1', baudrate = 115200, timeout = 3, open = True, is_reverse_left = False, is_reverse_right = True):
+    def __init__(self, port_left = '/dev/ttyACM0', port_right = '/dev/ttyACM1', baudrate = 115200, timeout = 0.1, open = True, is_reverse_left = False, is_reverse_right = True):
         self.left = Motor(port=port_left, baudrate=baudrate, timeout=timeout, open=open)
         self.right = Motor(port=port_right, baudrate=baudrate, timeout=timeout, open=open)
         self.speed = 0
