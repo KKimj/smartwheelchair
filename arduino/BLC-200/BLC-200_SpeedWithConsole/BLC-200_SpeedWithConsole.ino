@@ -15,15 +15,15 @@ int spd_input;
 void setup() {
   Serial.begin(115200);
 
-  Serial.println("*********************************************");
-  Serial.println("* Speed control with Serial Console");
-  Serial.println("*********************************************");
+  // Serial.println("*********************************************");
+  // Serial.println("* Speed control with Serial Console");
+  // Serial.println("*********************************************");
   
   // [[ Read rated speed from driver ]]
-  Serial.print("Read rated speed [RPM] : ");
+  // Serial.print("Read rated speed [RPM] : ");
   if(myDevice.get_Feedback(DEVICE_ID, 0xA6)){
     rated_speed = (uint16_t)myDevice.blcData[1] << 8 | (uint16_t)myDevice.blcData[2];
-    Serial.println(rated_speed);
+    // Serial.println(rated_speed);
   }else{
     Serial.println("Fail..");
     while(1);
