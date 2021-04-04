@@ -25,8 +25,9 @@ void setup() {
     Serial.println("Fail..");
     while(1);
   }
-  while(!Serial.available());
+  
   Serial.print("Press any KEY to start .. ");
+  while(!Serial.available());
   char tmp = Serial.read();
 }
 
@@ -34,7 +35,7 @@ void loop() {
   spd_input = rated_speed;
   myDevice.set_SpeedWithTime(DEVICE_ID, 0, spd_input * 10, SPD_SETTIME);
 
-  delay(100); // 0.1 sec
+  delay(1000); // 0.1 sec
   
   myDevice.set_SpeedWithTime(DEVICE_ID, 0, 0, SPD_SETTIME);
   while(1);
