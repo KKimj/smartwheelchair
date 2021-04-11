@@ -1,7 +1,7 @@
 from serial import Serial
 
 class USBSerial:
-    def __init__(self, port, baudrate, timeout = 0.1, open = False):
+    def __init__(self, port, baudrate, timeout = 0.1, write_timeout = 0.11, open = False):
         '''
         init method
         if open is set True then call open_serial()
@@ -9,6 +9,7 @@ class USBSerial:
         self._port = port
         self._baudrate = baudrate
         self._timeout = timeout
+        self._write_timeout = write_timeout
         self.serial = None
         if open:
             self.open_serial()
@@ -42,7 +43,7 @@ class USBSerial:
         if not self.serial:
             self.close_serial()
         try:
-            self.serial = Serial(port = self._port, baudrate = self._baudrate, timeout = self._timeout)
+            self.serial = Serial(port = self._port, baudrate = self._baudrate, timeout = self._timeout, write_timeout=self._write_timeout)
         except:
             print('Error : Can not open Serial, Retry!')
             return False
