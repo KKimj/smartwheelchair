@@ -43,8 +43,12 @@ class USBSerial:
         if not self.serial:
             self.close_serial()
         try:
-            self.serial = Serial(port = self._port, baudrate = self._baudrate, timeout = self._timeout, write_timeout=self._write_timeout)
-        except:
+            self.serial = Serial(port = self._port, baudrate = self._baudrate, timeout = self._timeout)
+
+        except Exception as inst:
+            print(type(inst))    # the exception instance
+            print(inst.args)     # arguments stored in .args
+            print(inst)   
             print('Error : Can not open Serial, Retry!')
             return False
         return True

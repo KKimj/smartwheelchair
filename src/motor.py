@@ -11,6 +11,12 @@ class Motor(USBSerial):
         self.serial = None
         if open:
             self.open_serial()
+    
+    # override
+    def open_serial(self):
+        self.serial = Serial(port = self._port, baudrate = self._baudrate, timeout = self._timeout, write_timeout=0.1)
+        
+
 
 
 class Motor_fair:
@@ -53,10 +59,10 @@ class Motor_fair:
 
     def set_speed(self, speed, debug = False):
         speed = int(speed)
-        if self.speed == speed:
-            if debug:
-                print('already speed : %d'%(self.speed))
-            return
+        # if self.speed == speed:
+        #     if debug:
+        #         print('already speed : %d'%(self.speed))
+        #     return
         self.speed = speed
         self.set_speed_left(speed)
         self.set_speed_right(speed)
@@ -67,7 +73,7 @@ class Motor_fair:
         if self.is_reverse[0]:
             speed *= -1
         self.left.write(speed)
-        time.sleep(0.5)
+        time.sleep(0.2)
 
     def set_speed_right(self, speed):
         self.speed_right = int(speed)
@@ -75,7 +81,7 @@ class Motor_fair:
         if self.is_reverse[1]:
             speed *= -1
         self.right.write(speed)
-        time.sleep(0.5)
+        time.sleep(0.2)
 
 
 

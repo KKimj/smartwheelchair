@@ -67,6 +67,7 @@ class SmartWheelChair:
     def run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False, debug = False):
         if type(only_option) == str: 
             if only_option == 'motor':
+                self.motor.open_serial()
                 self.motor.test()
                 self.motor.run()
                 
@@ -74,9 +75,11 @@ class SmartWheelChair:
                 self.HC_SR04.test()
                 self.HC_SR04.run(debug = debug)
             
-            if only_option == 'sonicdebug':
-                self.HC_SR04.test()
-                self.HC_SR04.run(debug = True)
+            if only_option == 'obstacle' or only_option == 'ob':
+                self.HC_SR04.open_serial()
+                while True:
+                    obstacle_status = self.obstacle_status()
+                    print('obstacle_status', obstacle_status)
 
             if only_option == 'forward':
                 self.HC_SR04.open_serial()
@@ -123,7 +126,7 @@ class SmartWheelChair:
                 
                 # Safe from obstacle
                 else:
-                    self.motor.accel(10)
+                    self.motor.accel(1)
                 
 
         except KeyboardInterrupt:
