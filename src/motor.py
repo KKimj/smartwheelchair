@@ -14,7 +14,7 @@ class Motor(USBSerial):
     
     # override
     def open_serial(self):
-        self.serial = Serial(port = self._port, baudrate = self._baudrate, timeout = self._timeout, write_timeout=0.1)
+        self.serial = Serial(port = self._port, baudrate = self._baudrate, timeout = self._timeout, write_timeout=0.11)
         
 
 
@@ -40,6 +40,10 @@ class Motor_fair:
         self.left.close_serial()
         time.sleep(0.5)
         self.right.close_serial()
+
+    def reset_output_buffer(self):
+        self.left.reset_output_buffer()
+        self.right.reset_output_buffer()
     
     def set_port(self, port_left, port_right, open=True):
         self.close_serial()
@@ -117,12 +121,12 @@ class Motor_fair:
         self.set_speed(speed, debug)
 
     
-    def turn_left(self, speed = 100):
+    def turn_left(self, speed = 50):
         self.set_speed_left(-speed)
         self.set_speed_right(speed)
 
     
-    def turn_right(self, speed = 100):
+    def turn_right(self, speed = 50):
         self.set_speed_left(speed)
         self.set_speed_right(-speed)
     

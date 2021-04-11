@@ -11,7 +11,7 @@ class SmartWheelChair:
         data = self.HC_SR04.get_front()
         if debug:
             print(data)
-        if min(data) <= 20 :
+        if min(data) <= 30 :
             return True
         else :
             return False
@@ -20,21 +20,21 @@ class SmartWheelChair:
         data = self.HC_SR04.get_front()
         if debug:
             print(data)
-        if min(data) <= 50 :
+        if min(data) <= 60 :
             return True
         else :
             return False
 
     
     def is_obstacle_left(self):
-        if min(self.HC_SR04.get_leftside()) <= 20 :
+        if min(self.HC_SR04.get_leftside()) <= 30 :
             return True
         else :
             return False
 
     
     def is_obstacle_right(self):
-        if min(self.HC_SR04.get_rightside()) <= 20 :
+        if min(self.HC_SR04.get_rightside()) <= 30 :
             return True
         else :
             return False
@@ -130,6 +130,10 @@ class SmartWheelChair:
                 
 
         except KeyboardInterrupt:
+            self.motor.reset_output_buffer()
             self.motor.stop()
-            self.close_serial()
+            time.sleep(0.3)
+            self.motor.close_serial()
+            time.sleep(1)
+            self.HC_SR04.close_serial()
             
