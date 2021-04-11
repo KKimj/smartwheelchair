@@ -38,6 +38,15 @@ class SmartWheelChair:
             return True
         else :
             return False
+
+    def obstacle_status(self):
+        data = self.HC_SR04.get()
+        ret = []
+        ret.append(self.is_obstacle_front())
+        ret.append(self.is_obstacle_left())
+        ret.append(self.is_obstacle_right())
+        
+
     
     def close_serial(self):
         self.HC_SR04.close_serial()
