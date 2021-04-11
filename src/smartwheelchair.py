@@ -40,11 +40,20 @@ class SmartWheelChair:
             return False
 
     def obstacle_status(self):
-        data = self.HC_SR04.get()
-        ret = []
-        ret.append(self.is_obstacle_front())
-        ret.append(self.is_obstacle_left())
-        ret.append(self.is_obstacle_right())
+        # data = self.HC_SR04.get()
+
+        # ret = []
+        # ret.append(self.is_obstacle_front())
+        # ret.append(self.is_obstacle_left())
+        # ret.append(self.is_obstacle_right())
+
+        ret = {
+            'front' : self.is_obstacle_front(),
+            'left' : self.is_obstacle_left(),
+            'right' : self.is_obstacle_right(),
+            'near' : self.is_obstacle_near(),
+        }
+        return ret
         
 
     
@@ -96,34 +105,25 @@ class SmartWheelChair:
         try:
             self.HC_SR04.open_serial()
             while True:
+                obstacle_status = self.obstacle_status()
                 if debug:
-                    print('Front :', self.HC_SR04.get_front(), 'Leftside :', self.HC_SR04.get_leftside(), 'Rightside :', self.HC_SR04.get_rightside())
-                
-                if not self.is_obstacle_near():
-                    self.motor.accel(10)
-                    if debug:
-                        print('accel')
-                    continue
+                    print('obstacle_status', obstacle_status)
 
-                if self.is_obstacle_front():
-                    self.motor.backward()
-                    if debug:
-                        print('back')
+                if obstacle_status['front']:
+                    print('obstacle_front')
                 
-                elif self.is_obstacle_near() and self.is_obstacle_left():
-                    self.motor.turn_right()
-                    if debug:
-                        print('right')
+                if obstacle_status['left']:
+                    print('obstacle_left')
                 
-                elif self.is_obstacle_near() and self.is_obstacle_right():
-                    self.motor.turn_left()
-                    if debug:
-                        print('left')
                 
-                else:
-                    self.motor.forward(debug=debug)
-                    if debug:
-                        print('forward')
+                if obstacle_status['right']:
+                    print('obstacle_right')
+                
+                
+                if obstacle_status['near']:
+                    print('obstacle_near')
+                
+
         except KeyboardInterrupt:
             self.motor.stop()
             self.close_serial()
