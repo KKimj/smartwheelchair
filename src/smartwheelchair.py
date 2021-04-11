@@ -110,18 +110,20 @@ class SmartWheelChair:
                     print('obstacle_status', obstacle_status)
 
                 if obstacle_status['front']:
-                    print('obstacle_front')
+                    if obstacle_status['left'] and obstacle_status['right']:
+                        self.motor.backward()
+                    elif obstacle_status['left']:
+                        self.motor.turn_right()
+                    
+                    elif obstacle_status['right']:
+                        self.motor.turn_left()
                 
-                if obstacle_status['left']:
-                    print('obstacle_left')
+                elif obstacle_status['near']:
+                    self.motor.forward()
                 
-                
-                if obstacle_status['right']:
-                    print('obstacle_right')
-                
-                
-                if obstacle_status['near']:
-                    print('obstacle_near')
+                # Safe from obstacle
+                else:
+                    self.motor.accel(10)
                 
 
         except KeyboardInterrupt:
