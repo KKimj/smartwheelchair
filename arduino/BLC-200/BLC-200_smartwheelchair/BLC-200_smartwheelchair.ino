@@ -41,12 +41,14 @@ void loop() {
   while(!Serial.available());
   
   spd_input = Serial.parseInt();
-
-  if(spd_input > rated_speed) spd_input = rated_speed;
-  else if(spd_input < -rated_speed) spd_input = -rated_speed;
   
-  if(spd_input > 0) myDevice.set_SpeedWithTime(DEVICE_ID, 0, spd_input * 10, SPD_SETTIME);
-  else myDevice.set_SpeedWithTime(DEVICE_ID, 1, -spd_input * 10, SPD_SETTIME);
-//  Serial.println(spd_input);
+  // valid input handling
+  if(-rated_speed < spd_input && spd_input < rated_speed)
+  {
+    if(spd_input > 0) myDevice.set_SpeedWithTime(DEVICE_ID, 0, spd_input * 10, SPD_SETTIME);
+    else myDevice.set_SpeedWithTime(DEVICE_ID, 1, -spd_input * 10, SPD_SETTIME);
+  }
+
+  // input buffer clear
   while(Serial.available()) Serial.read();
 }
