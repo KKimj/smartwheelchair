@@ -11,7 +11,7 @@ class SmartWheelChair:
         data = self.HC_SR04.get_front()
         if debug:
             print(data)
-        if min(data) <= 30 :
+        if min(data) <= 25 :
             return True
         else :
             return False
@@ -108,31 +108,61 @@ class SmartWheelChair:
         try:
             self.HC_SR04.open_serial()
             while True:
+                time_offset = 0.8
                 obstacle_status = self.obstacle_status()
                 if debug:
                     print('obstacle_status', obstacle_status)
 
                 if obstacle_status['front']:
                     if obstacle_status['left'] and obstacle_status['right']:
-                        self.motor.backward()
+                        self.motor.backward(debug=debug)
+                        time.sleep(time_offset)
+
                     elif obstacle_status['left']:
-                        self.motor.turn_right()
+                        self.motor.turn_right(debug=debug)
+                        time.sleep(time_offset)
+                        
+
                     
                     elif obstacle_status['right']:
-                        self.motor.turn_left()
+                        self.motor.turn_left(debug=debug)
+                        time.sleep(time_offset)
+                    else:
+                        self.motor.turn_left(debug=debug)
+                        time.sleep(time_offset)
+
                 
+                elif obstacle_status['left']:
+                    self.motor.turn_right(debug=debug)
+                    time.sleep(time_offset)
+
+                    
+                elif obstacle_status['right']:
+                    self.motor.turn_left(debug=debug)
+                    time.sleep(time_offset)
+
+
                 elif obstacle_status['near']:
-                    self.motor.forward()
+                    self.motor.forward(debug=debug)
+                    time.sleep(time_offset)
+
+
                 
                 # Safe from obstacle
                 else:
-                    self.motor.accel(1)
+                    self.motor.forward(debug=debug)
+                    time.sleep(time_offset)
+
                 
 
         except KeyboardInterrupt:
-            self.motor.reset_output_buffer()
+            self.motor.set_speed_left(0)
+            time.sleep(0.15)
+            self.motor.set_speed_right(0)
+            time.sleep(0.15)
             self.motor.stop()
-            time.sleep(0.3)
+            time.sleep(0.15)
+            
             self.motor.close_serial()
             time.sleep(1)
             self.HC_SR04.close_serial()

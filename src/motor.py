@@ -15,6 +15,12 @@ class Motor(USBSerial):
     # override
     def open_serial(self):
         self.serial = Serial(port = self._port, baudrate = self._baudrate, timeout = self._timeout, write_timeout=0.11)
+    
+    def reset_output_buffer(self):
+        self.serial.reset_output_buffer()
+
+    def stop(self):
+        self.serial.write(0)
         
 
 
@@ -26,6 +32,8 @@ class Motor_fair:
         self.speed = 0
         self.speed_left = 0
         self.speed_right = 0
+
+        self.std_speed = 200
         
         self.is_reverse = [is_reverse_left, is_reverse_right]
 
@@ -68,6 +76,7 @@ class Motor_fair:
         #         print('already speed : %d'%(self.speed))
         #     return
         self.speed = speed
+        self.reset_output_buffer()
         self.set_speed_left(speed)
         self.set_speed_right(speed)
     
@@ -77,7 +86,6 @@ class Motor_fair:
         if self.is_reverse[0]:
             speed *= -1
         self.left.write(speed)
-        time.sleep(0.2)
 
     def set_speed_right(self, speed):
         self.speed_right = int(speed)
@@ -85,7 +93,6 @@ class Motor_fair:
         if self.is_reverse[1]:
             speed *= -1
         self.right.write(speed)
-        time.sleep(0.2)
 
 
 
@@ -103,30 +110,43 @@ class Motor_fair:
             self.close_serial()
         
     
-    def forward(self, speed = 50, fastmode = False, debug = False):
+    def forward(self, speed = 200, fastmode = False, debug = False):
         '''
         recommend NOT to use fastmode option
         '''
         if fastmode:
-            speed = 100
+            speed = 200
+        if debug:
+            print('forward')
+            speed = self.std_speed
         self.set_speed(speed, debug)
         
 
-    def backward(self, speed = -50, fastmode = False, debug = False):
+    def backward(self, speed = -200, fastmode = False, debug = False):
         '''
         recommend NOT to use fastmode option
         '''
         if fastmode:
-            speed = -100
+            speed = -200
+        if debug:
+            print('backward')
+            speed = - self.std_speed
         self.set_speed(speed, debug)
 
     
-    def turn_left(self, speed = 50):
+    def turn_left(self, speed = 150, debug = False):
+        if debug:
+            print('turn left')
+            speed = self.std_speed
+
         self.set_speed_left(-speed)
         self.set_speed_right(speed)
 
     
-    def turn_right(self, speed = 50):
+    def turn_right(self, speed = 150, debug = False):
+        if debug:
+            print('turn right')
+            speed = self.std_speed
         self.set_speed_left(speed)
         self.set_speed_right(-speed)
     
