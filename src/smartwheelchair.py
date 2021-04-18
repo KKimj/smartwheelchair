@@ -34,7 +34,7 @@ class SmartWheelChair:
 
     
     def is_obstacle_right(self):
-        if min(self.HC_SR04.get_rightside()) <= 30 :
+        if min(self.HC_SR04.get_rightside()) <= 15 :
             return True
         else :
             return False
@@ -108,7 +108,7 @@ class SmartWheelChair:
         try:
             self.HC_SR04.open_serial()
             while True:
-                time_offset = 0.8
+                time_offset = 0.5
                 obstacle_status = self.obstacle_status()
                 if debug:
                     print('obstacle_status', obstacle_status)
@@ -146,6 +146,7 @@ class SmartWheelChair:
                 
                 time.sleep(time_offset)
                 self.motor.stop()
+                time.sleep(time_offset/2)
 
                 
 
