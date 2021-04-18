@@ -116,42 +116,36 @@ class SmartWheelChair:
                 if obstacle_status['front']:
                     if obstacle_status['left'] and obstacle_status['right']:
                         self.motor.backward(debug=debug)
-                        time.sleep(time_offset)
 
                     elif obstacle_status['left']:
                         self.motor.turn_right(debug=debug)
-                        time.sleep(time_offset)
-                        
 
                     
                     elif obstacle_status['right']:
                         self.motor.turn_left(debug=debug)
-                        time.sleep(time_offset)
                     else:
                         self.motor.turn_left(debug=debug)
-                        time.sleep(time_offset)
 
                 
                 elif obstacle_status['left']:
                     self.motor.turn_right(debug=debug)
-                    time.sleep(time_offset)
 
                     
                 elif obstacle_status['right']:
                     self.motor.turn_left(debug=debug)
-                    time.sleep(time_offset)
 
 
                 elif obstacle_status['near']:
                     self.motor.forward(debug=debug)
-                    time.sleep(time_offset)
 
 
                 
                 # Safe from obstacle
                 else:
                     self.motor.forward(debug=debug)
-                    time.sleep(time_offset)
+                
+                time.sleep(time_offset)
+                self.motor.stop()
 
                 
 
