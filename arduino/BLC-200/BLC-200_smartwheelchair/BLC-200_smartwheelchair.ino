@@ -29,10 +29,10 @@ void setup() {
     while(1);
   }
 
-  // Set max speed 300
-  if (rated_speed > 300)
+  // Set max speed 700
+  if (rated_speed > 700)
   {
-    rated_speed = 300;
+    rated_speed = 700;
   }
 }
 

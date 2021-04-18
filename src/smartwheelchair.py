@@ -108,7 +108,7 @@ class SmartWheelChair:
         try:
             self.HC_SR04.open_serial()
             while True:
-                time_offset = 0.5
+                time_offset = 1
                 obstacle_status = self.obstacle_status()
                 if debug:
                     print('obstacle_status', obstacle_status)
@@ -146,17 +146,18 @@ class SmartWheelChair:
                 
                 time.sleep(time_offset)
                 self.motor.stop()
-                time.sleep(time_offset/2)
+                time.sleep(time_offset*2)
 
                 
 
         except KeyboardInterrupt:
-            self.motor.set_speed_left(0)
-            time.sleep(0.15)
-            self.motor.set_speed_right(0)
-            time.sleep(0.15)
             self.motor.stop()
-            time.sleep(0.15)
+            time.sleep(1)
+            self.motor.set_speed_left(0)
+            time.sleep(1)
+            self.motor.set_speed_right(0)
+            time.sleep(1)
+            
             
             self.motor.close_serial()
             time.sleep(1)

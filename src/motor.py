@@ -33,7 +33,7 @@ class Motor_fair:
         self.speed_left = 0
         self.speed_right = 0
 
-        self.std_speed = 200
+        self.std_speed = 500
         
         self.is_reverse = [is_reverse_left, is_reverse_right]
 
