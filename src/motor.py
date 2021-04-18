@@ -33,7 +33,7 @@ class Motor_fair:
         self.speed_left = 0
         self.speed_right = 0
 
-        self.std_speed = 500
+        self.std_speed = 512
         
         self.is_reverse = [is_reverse_left, is_reverse_right]
 
@@ -139,16 +139,16 @@ class Motor_fair:
             print('turn left')
             speed = self.std_speed
 
-        self.set_speed_left(-speed)
-        self.set_speed_right(speed)
+        self.set_speed_left(-speed*0.2)
+        self.set_speed_right(speed*0.2)
 
     
     def turn_right(self, speed = 150, debug = False):
         if debug:
             print('turn right')
             speed = self.std_speed
-        self.set_speed_left(speed)
-        self.set_speed_right(-speed)
+        self.set_speed_left(speed*0.2)
+        self.set_speed_right(-speed*0.2)
     
     def run(self):
         while True:

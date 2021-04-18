@@ -82,10 +82,10 @@ class HC_SR04_fair():
         '''
         Side sensors are ... 5 6 7 8
         '''
-        return self.left.get()[self.channel//2:]
+        return self.left.get()[self.channel//2-1:]
     
     def get_rightside(self):
-        return self.right.get()[self.channel//2:]
+        return self.right.get()[self.channel//2-1:]
     
     
     def test(self):
