@@ -11,7 +11,7 @@ def main(stdscr):
         c = stdscr.getch()
         if c != -1:
             # print numeric value
-            stdscr.addstr(str(c) + ' ')
+            stdscr.addstr(str(c) + ' '+chr(c)+'\n')
             stdscr.refresh()
             # return curser to start position
             stdscr.move(0, 0)
