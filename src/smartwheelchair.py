@@ -1,6 +1,7 @@
 from HC_SR04 import HC_SR04_fair
 from motor import Motor_fair
 import time
+import threading
 
 class SmartWheelChair:
     def __init__(self):
@@ -61,7 +62,8 @@ class SmartWheelChair:
         self.HC_SR04.close_serial()
         self.motor.close_serial()
 
-
+    def _run(self):
+        pass
     
     
     def run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False, debug = False):
