@@ -6,16 +6,21 @@ import random
 command = None
 command_lock = threading._allocate_lock()
 
+stdscr = curses.initscr()
+stdscr.nodelay(1)
+
 def input_handler():
     print('input_handler')
     # do not wait for input when calling getch
     global command, command_lock
     tmp_command = None
 
-    stdscr = curses.initscr()
-    stdscr.nodelay(1)
+    
 
     while True:
+        # stdscr.clear()
+        # stdscr.move(0, 0)
+        # stdscr.refresh()
         c = stdscr.getch()
         if c == -1:
             continue
@@ -39,12 +44,10 @@ def input_handler():
         with command_lock:
             command = tmp_command
             time.sleep(1)
-        stdscr.refresh()
-        # stdscr.clear()
-        stdscr.move(0, 0)
+        
         
         if command == 'quit':
-            curses.endwin()
+            # curses.endwin()
             break
         
         # time.sleep(1)
@@ -61,11 +64,15 @@ def motor_handler():
 
         # with command_lock:
         #   pass
+        stdscr.clear()
+        stdscr.move(0, 0)
+        stdscr.refresh()
         print(command, end="motor_handler\n")
         
         prev_command = command
         
         if command == 'quit':
+                # curses.endwin()
                 break
             # command = None
         # time.sleep(1)
@@ -82,6 +89,7 @@ def obstacle_handler():
             'right' : False,
             'near' : False,
         }
+        obstacle_status[direction] = True
         if True:
             # print('obstacle_status', obstacle_status)
             pass
@@ -119,7 +127,7 @@ def obstacle_handler():
         with command_lock:
             command = tmp_command
             tmp_command = None
-        time.sleep(1)
+        time.sleep(0.1)
         if command == 'quit':
                 break
         
@@ -145,6 +153,7 @@ if __name__ == '__main__':
             if command == 'quit':
                 break
         except KeyboardInterrupt:
+            curses.endwin()
             print("### End ###")
             break
 
