@@ -41,12 +41,14 @@ class SmartWheelChair:
             return False
 
     def obstacle_status(self):
-        # data = self.HC_SR04.get()
+        # sonic_data = self.HC_SR04.get()
 
         # ret = []
         # ret.append(self.is_obstacle_front())
         # ret.append(self.is_obstacle_left())
         # ret.append(self.is_obstacle_right())
+        
+        # front = 
 
         ret = {
             'front' : self.is_obstacle_front(),
@@ -54,6 +56,7 @@ class SmartWheelChair:
             'right' : self.is_obstacle_right(),
             'near' : self.is_obstacle_near(),
         }
+        # return ret, sonic_data
         return ret
         
 
@@ -184,47 +187,75 @@ class SmartWheelChair:
             if self.command == 'quit':
                     break
 
-    def _run(self, debug):
+    def _run(self, debug, data = False):
         try:
+            if data:
+                start_time = time.time()
+                data_file = open('logdata_'+time.ctime()+'.txt', mode='wt', encoding='utf-8')
+                data_file.write('Time\tL1\tL2\tL3\tL4\tR1\tR2\tR3\tR4\tLRPM\tRRPM\tMotion\n')
             self.HC_SR04.open_serial()
             while True:
                 time_offset = 0.0
+                tmp_command = None
                 obstacle_status = self.obstacle_status()
-                if debug:
-                    print('obstacle_status', obstacle_status)
-
+                
                 if obstacle_status['front']:
                     # break
                     if obstacle_status['left'] and obstacle_status['right']:
                         self.motor.backward(debug=debug)
+                        tmp_command = 'backward'
 
                     elif obstacle_status['left']:
                         self.motor.turn_right(debug=debug)
+                        tmp_command = 'right'
 
                     
                     elif obstacle_status['right']:
                         self.motor.turn_left(debug=debug)
+                        tmp_command = 'left'
                     else:
                         self.motor.turn_left(debug=debug)
+                        tmp_command = 'left'
 
                 
                 elif obstacle_status['left']:
                     self.motor.turn_right(debug=debug)
+                    tmp_command = 'right'
 
                     
                 elif obstacle_status['right']:
                     self.motor.turn_left(debug=debug)
+                    tmp_command = 'left'
 
 
                 elif obstacle_status['near']:
                     self.motor.forward(speed = 150, debug=debug)
+                    tmp_command = 'forward'
 
 
                 
                 # Safe from obstacle
                 else:
                     self.motor.forward(debug=debug)
+                    tmp_command = 'forward'
                 
+
+                if debug:
+                    print('obstacle_status', obstacle_status)
+
+                if data:
+                    data_file.write('%.3f\t'%(time.time()-start_time))
+                    sonic_data = self.HC_SR04.get()
+                    for data in sonic_data:
+                        data_file.write('%d\t'%(data))
+                    data_file.write('%d\t'%(self.motor.speed_left))
+                    data_file.write('%d\t'%(self.motor.speed_right))
+                    data_file.write(tmp_command+'\n')
+
+
+                    
+
+
                 time.sleep(time_offset)
                 # self.motor.stop()
                 # time.sleep(time_offset*2)
@@ -237,9 +268,13 @@ class SmartWheelChair:
             time.sleep(1)
             
             
+            if data:
+                data_file.close()
+            
             self.motor.close_serial()
             time.sleep(1)
             self.HC_SR04.close_serial()
+
 
         except KeyboardInterrupt:
             self.motor.flush()
@@ -251,6 +286,9 @@ class SmartWheelChair:
             # self.motor.set_speed_right(0)
             time.sleep(1)
             
+            
+            if data:
+                data_file.close()
             
             self.motor.close_serial()
             time.sleep(1)
@@ -326,11 +364,11 @@ class SmartWheelChair:
                 print("### End ###")
                 break
     
-    def run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False, debug = False):
+    def run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False, debug = False, data = False):
         if type(only_option) == str: 
             self.onlyoption_run(only_option = only_option, debug = debug)
         else:
-            self._run(debug = debug)
+            self._run(debug = debug, data = data)
         
         
 
