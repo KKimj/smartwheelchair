@@ -62,6 +62,9 @@ class SmartWheelChair:
         self.HC_SR04.close_serial()
         self.motor.close_serial()
 
+    def print_out(self):
+        pass
+
     def input_handler(self):
         tmp_command = None
 
@@ -181,11 +184,11 @@ class SmartWheelChair:
             if self.command == 'quit':
                     break
 
-    def _run(self):
+    def _run(self, debug):
         try:
             self.HC_SR04.open_serial()
             while True:
-                time_offset = 0.85
+                time_offset = 0.0
                 obstacle_status = self.obstacle_status()
                 if debug:
                     print('obstacle_status', obstacle_status)
@@ -239,11 +242,13 @@ class SmartWheelChair:
             self.HC_SR04.close_serial()
 
         except KeyboardInterrupt:
+            self.motor.flush()
             self.motor.stop()
-            time.sleep(1)
-            self.motor.set_speed_left(0)
-            time.sleep(1)
-            self.motor.set_speed_right(0)
+            self.motor.flush()
+            # time.sleep(1)
+            # self.motor.set_speed_left(0)
+            # time.sleep(1)
+            # self.motor.set_speed_right(0)
             time.sleep(1)
             
             
@@ -325,7 +330,7 @@ class SmartWheelChair:
         if type(only_option) == str: 
             self.onlyoption_run(only_option = only_option, debug = debug)
         else:
-            self._run()
+            self._run(debug = debug)
         
         
 

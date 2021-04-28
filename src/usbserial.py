@@ -62,6 +62,7 @@ class USBSerial:
         if self.serial:
             if type(message) is not str:
                 message = str(message)
+            message += '\n'
             self.serial.write(bytes(message.encode()))
     
     def readline(self):

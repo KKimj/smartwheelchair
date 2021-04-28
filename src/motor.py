@@ -80,25 +80,41 @@ class Motor_fair:
         #         print('already speed : %d'%(self.speed))
         #     return
         self.speed = speed
-        self.reset_output_buffer()
-        self.set_speed_left(speed)
-        self.flush()
+        # self.reset_output_buffer()
+        self.left.flush()
+        self.right.flush()
+
         self.set_speed_right(speed)
-        self.flush()
+        self.set_speed_left(speed)
+
+        self.left.flush()
+        self.right.flush()
+        time.sleep(0.05)
+        # self.left.flush()
+
+        # self.right.flush()
     
     def set_speed_left(self, speed):
         self.speed_left = int(speed)
         
         if self.is_reverse[0]:
             speed *= -1
+        # self.left.flush()
+        # self.left.reset_output_buffer()
         self.left.write(speed)
+        self.left.flush()
+
 
     def set_speed_right(self, speed):
         self.speed_right = int(speed)
 
         if self.is_reverse[1]:
             speed *= -1
+        # self.right.flush()
+        # self.right.reset_output_buffer()
         self.right.write(speed)
+        self.right.flush()
+
 
 
 
@@ -145,16 +161,16 @@ class Motor_fair:
             print('turn left')
             speed = self.std_speed
 
-        self.set_speed_left(-speed*0.2)
-        self.set_speed_right(speed*0.2)
+        self.set_speed_left(-speed*0.3)
+        self.set_speed_right(speed*0.3)
 
     
     def turn_right(self, speed = 150, debug = False):
         if debug:
             print('turn right')
             speed = self.std_speed
-        self.set_speed_left(speed*0.2)
-        self.set_speed_right(-speed*0.2)
+        self.set_speed_left(speed*0.3)
+        self.set_speed_right(-speed*0.3)
     
     def run(self):
         while True:
