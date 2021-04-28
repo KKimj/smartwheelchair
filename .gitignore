@@ -130,4 +130,4 @@ dmypy.json
 
 
 # log files
-.logdata_*
+*logdata_*
