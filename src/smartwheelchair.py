@@ -62,51 +62,126 @@ class SmartWheelChair:
         self.HC_SR04.close_serial()
         self.motor.close_serial()
 
-    def _run(self):
-        pass
-    
-    
-    def run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False, debug = False):
-        if type(only_option) == str: 
-            if only_option == 'motor':
-                self.motor.open_serial()
-                self.motor.test()
-                self.motor.run()
-                
-            if only_option == 'sonic':
-                self.HC_SR04.test()
-                self.HC_SR04.run(debug = debug)
-            
-            if only_option == 'obstacle' or only_option == 'ob':
-                self.HC_SR04.open_serial()
-                while True:
-                    obstacle_status = self.obstacle_status()
-                    print('obstacle_status', obstacle_status)
+    def input_handler(self):
+        tmp_command = None
 
-            if only_option == 'forward':
-                self.HC_SR04.open_serial()
-                forward_flag = False
-                speed_flag = 0
-                try:
-                    while True:
-                        if self.is_obstacle_front(debug = debug):
-                            self.motor.stop()
-                            forward_flag = False
-                        # elif not forward_flag:
-                        elif self.is_obstacle_near(debug = debug):
-                            self.motor.set_speed(50)
-                        else:
-                            # self.motor.forward(fastmode = fastmode, debug = debug)
-                            # self.motor.forward(fastmode = fastmode, debug = debug)
-                            self.motor.accel(10)
-                except KeyboardInterrupt:
-                    self.motor.stop()
-                    time.sleep(0.1)
-                    self.motor.stop()
-                    # self.close_serial()
+        while True:
+            # stdscr.clear()
+            # stdscr.move(0, 0)
+            # stdscr.refresh()
+            c = self.stdscr.getch()
+            if c == -1:
+                continue
+            c = chr(c)
+
+            if c == 'w':
+                tmp_command = 'forward'
+            elif c == 'a':
+                tmp_command = 'turn_left'
+            elif c == 's':
+                tmp_command = 'stop'
+            elif c == 'd':
+                tmp_command = 'turn_right'
+            elif c == 'x':
+                tmp_command = 'backward'
+            elif c == 'q':
+                tmp_command = 'quit'
+            else:
+                continue
+
+            with self.command_lock:
+                self.command = tmp_command
+                time.sleep(1)
             
-            return
-        
+            
+            if self.command == 'quit':
+                # curses.endwin()
+                break
+            
+            # time.sleep(1)
+    
+    def motor_handler(self):
+        prev_command = None
+        while True:
+            while not self.command:
+                time.sleep(0.01)
+
+            if prev_command == self.command:
+                continue
+
+            # with command_lock:
+            #   pass
+            stdscr.clear()
+            stdscr.move(0, 0)
+            stdscr.refresh()
+            # print(command, end="motor_handler\n")
+
+            
+            prev_command = self.command
+            
+            if self.command == 'quit':
+                    # curses.endwin()
+                    # time.sleep(0.1)
+                    self.motor.stop()
+                    time.sleep(2)
+                    break
+                # command = None
+            # time.sleep(1)
+            elif self.command == 'forward':
+                self.motor.forward()
+            elif self.command == 'turn_left':
+                self.motor.turn_left()
+            elif self.command == 'turn_right':
+                self.motor.turn_right()
+            elif self.command == 'backward':
+                self.motor.backward()
+    
+    def obstacle_handler(self):
+        while True:
+            obstacle_status = self.obstacle_status()
+
+            if True:
+                # print('obstacle_status', obstacle_status)
+                pass
+
+            if obstacle_status['front']:
+                # break
+                if obstacle_status['left'] and obstacle_status['right']:
+                    tmp_command = 'backward'
+
+                elif obstacle_status['left']:
+                    tmp_command = 'turn_right'
+
+                
+                elif obstacle_status['right']:
+                    tmp_command = 'turn_left'
+
+                else:
+                    tmp_command = 'turn_left'
+
+            elif obstacle_status['left']:
+                tmp_command = 'turn_right'
+
+                
+            elif obstacle_status['right']:
+                tmp_command = 'turn_left'
+
+
+            elif obstacle_status['near']:
+                tmp_command = 'forward'
+
+            # Safe from obstacle
+            else:
+                tmp_command = 'forward'
+
+            with self.command_lock:
+                self.command = tmp_command
+                tmp_command = None
+            # time.sleep(0.1)
+            if self.command == 'quit':
+                    break
+
+    def _run(self):
         try:
             self.HC_SR04.open_serial()
             while True:
@@ -175,4 +250,85 @@ class SmartWheelChair:
             self.motor.close_serial()
             time.sleep(1)
             self.HC_SR04.close_serial()
+
+    def onlyoption_run(self, only_option, debug):
+        if type(only_option) == str: 
+            if only_option == 'motor':
+                self.motor.open_serial()
+                self.motor.test()
+                self.motor.run()
+                
+            if only_option == 'sonic':
+                self.HC_SR04.test()
+                self.HC_SR04.run(debug = debug)
+            
+            if only_option == 'obstacle' or only_option == 'ob':
+                self.HC_SR04.open_serial()
+                while True:
+                    obstacle_status = self.obstacle_status()
+                    print('obstacle_status', obstacle_status)
+
+            if only_option == 'forward':
+                self.HC_SR04.open_serial()
+                forward_flag = False
+                speed_flag = 0
+                try:
+                    while True:
+                        if self.is_obstacle_front(debug = debug):
+                            self.motor.stop()
+                            forward_flag = False
+                        # elif not forward_flag:
+                        elif self.is_obstacle_near(debug = debug):
+                            self.motor.set_speed(50)
+                        else:
+                            # self.motor.forward(fastmode = fastmode, debug = debug)
+                            # self.motor.forward(fastmode = fastmode, debug = debug)
+                            self.motor.accel(10)
+                except KeyboardInterrupt:
+                    self.motor.stop()
+                    time.sleep(0.1)
+                    self.motor.stop()
+                    # self.close_serial()
+            
+            return
+    
+    def multi_tread_run(self):
+        input_thread = threading.Thread(target=self.input_handler, args=())
+        input_thread.daemon = True 
+
+        motor_thread = threading.Thread(target=self.motor_handler, args=())
+        motor_thread.daemon = True
+        
+        obstacle_thread = threading.Thread(target=self.obstacle_handler, args=())
+        obstacle_thread.daemon = True
+
+        self.command = None
+        self.command_lock = threading._allocate_lock()
+
+        self.stdscr = curses.initscr()
+        self.stdscr.nodelay(1)
+
+        input_thread.start()
+        obstacle_thread.start()
+        motor_thread.start()
+
+        while True:
+            try:
+                if self.command == 'quit':
+                    break
+            except KeyboardInterrupt:
+                self.curses.endwin()
+                print("### End ###")
+                break
+    
+    def run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False, debug = False):
+        if type(only_option) == str: 
+            self.onlyoption_run(only_option = only_option, debug = debug)
+        else:
+            self._run()
+        
+        
+
+        
+        
             
