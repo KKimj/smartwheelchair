@@ -58,6 +58,10 @@ class Motor_fair:
         self.left = Motor(port=port_left, baudrate=self.left.baudrate, timeout=self.left.timeout, open=open)
         self.right = Motor(port=port_right, baudrate=self.right.baudrate, timeout=self.right.timeout, open=open)
         self.open_serial()
+
+    def flush(self):
+        self.left.flush()
+        self.right.flush()
         
     
     def switch(self):
@@ -78,7 +82,9 @@ class Motor_fair:
         self.speed = speed
         self.reset_output_buffer()
         self.set_speed_left(speed)
+        self.flush()
         self.set_speed_right(speed)
+        self.flush()
     
     def set_speed_left(self, speed):
         self.speed_left = int(speed)

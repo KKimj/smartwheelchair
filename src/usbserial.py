@@ -78,6 +78,9 @@ class USBSerial:
 
         return self.serial.read(size)
 
+    def flush(self):
+        self.serial.flush()
+
     def test(self):
         '''
         Print out status
