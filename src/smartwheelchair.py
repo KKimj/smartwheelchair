@@ -265,7 +265,7 @@ class SmartWheelChair:
 
                 if fileout:
                     data_file.write('%.3f\t'%(time.time()-start_time))
-                    sonic_data = self.obstacle_status['data']
+                    sonic_data = obstacle_status['data']
                     for data in sonic_data:
                         data_file.write('%d\t'%(data))
                     data_file.write('%d\t'%(self.motor.speed_left))
