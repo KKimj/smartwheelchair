@@ -209,7 +209,7 @@ class SmartWheelChair:
 
     def _run(self, debug, fileout = False):
         try:
-            if data:
+            if fileout:
                 start_time = time.time()
                 data_file = open('logdata_'+time.ctime()+'.txt', mode='wt', encoding='utf-8')
                 data_file.write('Time\tL1\tL2\tL3\tL4\tR1\tR2\tR3\tR4\tLRPM\tRRPM\tMotion\n')
@@ -288,7 +288,7 @@ class SmartWheelChair:
             time.sleep(1)
             
             
-            if data:
+            if fileout:
                 data_file.close()
             
             self.motor.close_serial()
@@ -307,7 +307,7 @@ class SmartWheelChair:
             time.sleep(1)
             
             
-            if data:
+            if fileout:
                 data_file.close()
             
             self.motor.close_serial()
