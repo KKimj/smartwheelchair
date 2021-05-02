@@ -8,8 +8,9 @@ class SmartWheelChair:
         self.HC_SR04 = HC_SR04_fair(channel = 4)
         self.motor = Motor_fair()
 
-    def is_obstacle_front(self, debug = False):
-        data = self.HC_SR04.get_front()
+    def is_obstacle_front(self, debug = False, data = None):
+        if data is None:
+            data = self.HC_SR04.get_front()
         if debug:
             print(data)
         if min(data) <= 25 :
@@ -17,8 +18,9 @@ class SmartWheelChair:
         else :
             return False
 
-    def is_obstacle_near(self, debug = False):
-        data = self.HC_SR04.get_front()
+    def is_obstacle_near(self, debug = False, data = None):
+        if data is None:
+            data = self.HC_SR04.get_front()
         if debug:
             print(data)
         if min(data) <= 60 :
@@ -27,20 +29,28 @@ class SmartWheelChair:
             return False
 
     
-    def is_obstacle_left(self):
-        if min(self.HC_SR04.get_leftside()) <= 30 :
+    def is_obstacle_left(self, debug = False, data = None):
+        if data is None:
+            data = self.HC_SR04.get_leftside()
+        if debug:
+            print(data)
+        if min(data) <= 30 :
             return True
         else :
             return False
 
     
-    def is_obstacle_right(self):
-        if min(self.HC_SR04.get_rightside()) <= 15 :
+    def is_obstacle_right(self, debug = False, data = None):
+        if data is None:
+            data = self.HC_SR04.get_rightside()
+        if debug:
+            print(data)
+        if min(data) <= 15 :
             return True
         else :
             return False
 
-    def obstacle_status(self):
+    def obstacle_status(self, debug = False, data = None):
         # sonic_data = self.HC_SR04.get()
 
         # ret = []
@@ -49,12 +59,22 @@ class SmartWheelChair:
         # ret.append(self.is_obstacle_right())
         
         # front = 
+        if data is None:
+            data = self.HC_SR04.get()
+
+        ch = self.HC_SR04.channel
+
+        front_data = data[:ch][:ch//2] + data[ch:][:ch//2]
+        left_data = data[:ch][ch//2-1:]
+        right_data = data[ch:][ch//2-1:]
+        near_data = front_data
 
         ret = {
-            'front' : self.is_obstacle_front(),
-            'left' : self.is_obstacle_left(),
-            'right' : self.is_obstacle_right(),
-            'near' : self.is_obstacle_near(),
+            'front' : self.is_obstacle_front(data = front_data),
+            'left' : self.is_obstacle_left(data = left_data),
+            'right' : self.is_obstacle_right(data = right_data),
+            'near' : self.is_obstacle_near(data = near_data),
+            'data' : data
         }
         # return ret, sonic_data
         return ret
@@ -245,7 +265,7 @@ class SmartWheelChair:
 
                 if data:
                     data_file.write('%.3f\t'%(time.time()-start_time))
-                    sonic_data = self.HC_SR04.get()
+                    sonic_data = self.obstacle_status['data']
                     for data in sonic_data:
                         data_file.write('%d\t'%(data))
                     data_file.write('%d\t'%(self.motor.speed_left))
