@@ -207,7 +207,7 @@ class SmartWheelChair:
             if self.command == 'quit':
                     break
 
-    def _run(self, debug, data = False):
+    def _run(self, debug, fileout = False):
         try:
             if data:
                 start_time = time.time()
@@ -263,7 +263,7 @@ class SmartWheelChair:
                 if debug:
                     print('obstacle_status', obstacle_status)
 
-                if data:
+                if fileout:
                     data_file.write('%.3f\t'%(time.time()-start_time))
                     sonic_data = self.obstacle_status['data']
                     for data in sonic_data:
@@ -384,11 +384,11 @@ class SmartWheelChair:
                 print("### End ###")
                 break
     
-    def run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False, debug = False, data = False):
+    def run(self, only_option='', joystick = False, bluetooth = False, multi_tread = False, fastmode = False, debug = False, fileout = False):
         if type(only_option) == str: 
             self.onlyoption_run(only_option = only_option, debug = debug)
         else:
-            self._run(debug = debug, data = data)
+            self._run(debug = debug, fileout = fileout)
         
         
 
